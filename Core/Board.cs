@@ -63,7 +63,7 @@ public class Board//:IEnumerable<Field>
 
         for (int i = 0; i < fields.GetLength(0); ++i)
             for (int j = 0; j < fields.GetLength(1); ++j)
-                freeFields.Add(fields[i, j]);
+                freeFields.Add(fields[i,j]);
 
         return freeFields.FindAll(field => field.type == Field.Type.Black && field.fieldObjects.Count==0);
     }
@@ -72,7 +72,7 @@ public class Board//:IEnumerable<Field>
     {
         List<Field> freeField = FreeFields();
         System.Random rand = new System.Random();
-        int randIndex = rand.Next(0, freeField.Count - 1);
+        int randIndex = UnityEngine.Random.Range(0, freeField.Count - 1); //rand.Next(0, freeField.Count - 1);
         return freeField[randIndex];
     }
 
@@ -83,62 +83,5 @@ public class Board//:IEnumerable<Field>
         Place(coreObject, RandomField());
         return true;
     }
-    /*
-    public IEnumerator<Field> GetEnumerator()
-    {
-        return new BoardEnum(fields);
-    }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return (IEnumerator)GetEnumerator();
-    }
-
-    public class BoardEnum : IEnumerator
-    {
-        public Field[] _people;
-
-        // Enumerators are positioned before the first element
-        // until the first MoveNext() call.
-        int position = -1;
-
-        public PeopleEnum(Person[] list)
-        {
-            _people = list;
-        }
-
-        public bool MoveNext()
-        {
-            position++;
-            return (position < _people.Length);
-        }
-
-        public void Reset()
-        {
-            position = -1;
-        }
-
-        object IEnumerator.Current
-        {
-            get
-            {
-                return Current;
-            }
-        }
-
-        public Person Current
-        {
-            get
-            {
-                try
-                {
-                    return _people[position];
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    throw new InvalidOperationException();
-                }
-            }
-        }
-    }*/
 }

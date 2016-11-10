@@ -6,15 +6,17 @@ using System.Collections.Generic;
 using CO = CoreObject;
 public class GameGui : MonoBehaviour
     {
-        public Game game=new Game();
+        public Game game;
         public Board board;
 
         public static bool inputFinished;
 
         public float fieldW = 70f, fieldH = 50f;
         float ratio = 0.9f;
-
-        void Awake() { Field.SetSkin();  SetSkins(); }
+    
+        void Awake() { Field.SetSkin();  SetSkins();
+                       game = new Game();
+        }
 
         public static void SetSkins()
         {
