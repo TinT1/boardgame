@@ -187,7 +187,7 @@ public static class GameInitialization
                                                                         stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: 0))));
 
 
-        CO crni = new CO("Bl", canStepOnPrevious: true);
+        CO crni = new CO("Bl", canStepOnPrevious: true,pickUpOnMaxStep:false);
 
         CO zeleni = new CO("G");
         zeleni.items.Add(minePlacer);
@@ -199,7 +199,7 @@ public static class GameInitialization
 
         game.characters.Add(zeleni);
         game.characters.Add(crveni);
-        game.characters.Add(plavi);
+        game.characters.Add(crni);
         game.characters.Add(zuti);
         Board.Place(new CO(catapult), game.board[5, 5]);
     }
