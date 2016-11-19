@@ -18,7 +18,7 @@ public partial class CoreObject
     public Type type;
     public string name;
     public int[] stepPattern;
-
+    public bool pickUpOnMaxStep;
     public int health;
 
 
@@ -75,6 +75,7 @@ public partial class CoreObject
 
     public CoreObject(string name,
                         int[] stepPattern = null,
+                        bool pickUpOnMaxStep = true,
                         int health = 2,
                         COEvent guiEvent=null,
                         List<COEvent> eventAction = null,
@@ -88,6 +89,7 @@ public partial class CoreObject
     {
         this.name = name;
         if (stepPattern == null) this.stepPattern = defaultStepPattern; else this.stepPattern = stepPattern;
+        this.pickUpOnMaxStep = pickUpOnMaxStep;
         this.health = health;
 
         if(guiEvent!=null)this.guiEvent = new COEvent(guiEvent);
@@ -104,6 +106,7 @@ public partial class CoreObject
         this.canStepOnPrevious = canStepOnPrevious;
         if (range == null) this.range = new CORange(); else this.range = range;
         this.type = type;
+
 
     }
 
