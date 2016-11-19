@@ -62,7 +62,6 @@ public class Game
         round = turn / characters.Count;
 
         currCh = characters[turn % characters.Count];
-
         if(deadCharacters.Contains(currCh)){ NextPlayer(); return;}
 
         step = 0;
@@ -154,10 +153,11 @@ public class Game
     {
         if (Field.CoordinateDistance(character.currentField, field) != 1) return false;
 
-        foreach (CO target in field.fieldObjects) 
-            if      (target.type == CoreObject.Type.Character && character.blockFree.Contains(CoreObject.Type.Character) == false)          return false;
-            else if (target.type == CoreObject.Type.Environment && character.blockFree.Contains(CoreObject.Type.Environment) == false)      return false;
-            
+        foreach (CO target in field.fieldObjects)
+            if (target.type == CoreObject.Type.Character && character.blockFree.Contains(CoreObject.Type.Character) == false) return false;
+            else if (target.type == CoreObject.Type.Environment && character.blockFree.Contains(CoreObject.Type.Environment) == false) return false;
+
+        if (character.previousField == field && !(step == 0)) return false;
         return true;
     }
 

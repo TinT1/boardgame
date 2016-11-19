@@ -116,7 +116,7 @@ public partial class CoreObject
         this.name = co.name;
         if (stepPattern == null) this.stepPattern = defaultStepPattern; else this.stepPattern = co.stepPattern;
         this.health = co.health;
-
+        this.pickUpOnMaxStep = co.pickUpOnMaxStep;
         if (co.guiEvent != null) this.guiEvent = new COEvent(co.guiEvent);
 
         if (co.coEvents == null) this.coEvents = new List<COEvent>();
