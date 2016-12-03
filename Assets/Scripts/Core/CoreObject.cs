@@ -20,7 +20,7 @@ public partial class CoreObject
     public int[] stepPattern;
     public bool pickUpOnMaxStep;
     public int health;
-
+    public int crystals;
 
 
     public COEvent guiEvent;
@@ -77,6 +77,7 @@ public partial class CoreObject
                         int[] stepPattern = null,
                         bool pickUpOnMaxStep = true,
                         int health = 2,
+                        int crystals = 0,
                         COEvent guiEvent=null,
                         List<COEvent> eventAction = null,
                         bool block = false,
@@ -91,7 +92,7 @@ public partial class CoreObject
         if (stepPattern == null) this.stepPattern = defaultStepPattern; else this.stepPattern = stepPattern;
         this.pickUpOnMaxStep = pickUpOnMaxStep;
         this.health = health;
-
+        this.crystals = crystals;
         if(guiEvent!=null)this.guiEvent = new COEvent(guiEvent);
 
         if (coEvents == null) this.coEvents = new List<COEvent>();
@@ -116,6 +117,7 @@ public partial class CoreObject
         this.name = co.name;
         if (stepPattern == null) this.stepPattern = defaultStepPattern; else this.stepPattern = co.stepPattern;
         this.health = co.health;
+        this.crystals = co.crystals;
         this.pickUpOnMaxStep = co.pickUpOnMaxStep;
         if (co.guiEvent != null) this.guiEvent = new COEvent(co.guiEvent);
 
@@ -190,7 +192,7 @@ public partial class CoreObject
 
 public partial class CoreObject
 {
-    public enum Type { Null,Character, Weapon, Utility, Environment };
+    public enum Type { Null,Character, Weapon, Utility, Environment, Crystal };
 }
 
 public partial class CoreObject

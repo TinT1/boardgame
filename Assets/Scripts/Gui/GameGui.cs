@@ -109,6 +109,10 @@ public class GameGui : MonoBehaviour
             {
                 game.PickUp(fObj);
             }
+            if (game.CanCollectCrystal(fObj) && GUI.Button(new Rect((Board.n + 2) * fieldW, fieldH * row, fieldW, fieldH), "collectCrystal:" + fObj.name))
+            {
+                game.CollectCrystal(fObj);
+            }
             ++row;
         });
        

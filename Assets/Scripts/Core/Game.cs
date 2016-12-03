@@ -198,13 +198,24 @@ public class Game
         Board.Remove(item);
         ExecEventAction(EvTrig.Type.Pickup, item);
     }
+    public void CollectCrystal(CO item)
+    {
+        currCh.crystals++;
+        Board.Remove(item);
+    }
 
 
     public bool CanEquip(CO item) { return item.usable &&
                                            item.guiEvent.eventTrigger.IsTriggered(EvTrig.Type.Default,round,step,maxStep,0);     }
 
     public bool CanPickUp(CO item) {
-        if ((item.pickable && !currCh.pickUpOnMaxStep) || step == maxStep) return item.pickable; else return false;
+        if (item.pickable && (!currCh.pickUpOnMaxStep || step == maxStep)) return item.pickable; else return false;
     }
     public bool CanFinishTurn() { return false; }
+
+    public bool CanCollectCrystal(CO item)
+    {
+        return item.type == CoreObject.Type.Crystal;
+    }
+
 }
