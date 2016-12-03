@@ -21,6 +21,7 @@ public partial class CoreObject
     public bool pickUpOnMaxStep;
     public int health;
     public int crystals;
+    public int lastCrystalTurn;
 
 
     public COEvent guiEvent;
@@ -63,6 +64,7 @@ public partial class CoreObject
         environment.Add(co);
     }
 
+
     private int[] defaultStepPattern = new int[] { 1, 2, 3, 4, 5, 6 };
 
     Dictionary<String, COData> additionalVars = new Dictionary<string, COData>();
@@ -78,7 +80,8 @@ public partial class CoreObject
                         bool pickUpOnMaxStep = true,
                         int health = 2,
                         int crystals = 0,
-                        COEvent guiEvent=null,
+                        int lastCrystalTurn = -1,
+                        COEvent guiEvent =null,
                         List<COEvent> eventAction = null,
                         bool block = false,
                         List<Type> blockFree = null,
@@ -93,6 +96,7 @@ public partial class CoreObject
         this.pickUpOnMaxStep = pickUpOnMaxStep;
         this.health = health;
         this.crystals = crystals;
+        this.lastCrystalTurn = lastCrystalTurn;
         if(guiEvent!=null)this.guiEvent = new COEvent(guiEvent);
 
         if (coEvents == null) this.coEvents = new List<COEvent>();
@@ -118,6 +122,7 @@ public partial class CoreObject
         if (stepPattern == null) this.stepPattern = defaultStepPattern; else this.stepPattern = co.stepPattern;
         this.health = co.health;
         this.crystals = co.crystals;
+        this.lastCrystalTurn = co.lastCrystalTurn;
         this.pickUpOnMaxStep = co.pickUpOnMaxStep;
         if (co.guiEvent != null) this.guiEvent = new COEvent(co.guiEvent);
 

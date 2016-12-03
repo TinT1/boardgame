@@ -175,7 +175,7 @@ public static class GameInitialization
                                                 eventAction: delegate (CO character, CO caller, CO target) {
                                                     System.Random rnd = new System.Random();
                                                     if(rnd.NextDouble()>0.9f)game.board.TryRandomPlace(new CO(catapult));
-                                                    if(rnd.NextDouble()>0.9f)game.board.TryRandomPlace(new CO(crystal));
+                                                    if (game.crystalsOnBoard < 3) { game.crystalsOnBoard++; game.board.TryRandomPlace(new CO(crystal)); }
                                                 }));
 
 

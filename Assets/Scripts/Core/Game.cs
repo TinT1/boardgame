@@ -23,7 +23,8 @@ public class Game
 
 
     public List<CO> gameObjects  = new List<CO>();
-   
+
+    public int crystalsOnBoard = 0;
     public int step;
     public int maxStep; 
     public int dice;
@@ -200,7 +201,9 @@ public class Game
     }
     public void CollectCrystal(CO item)
     {
+        crystalsOnBoard--;
         currCh.crystals++;
+        currCh.lastCrystalTurn = turn;
         Board.Remove(item);
     }
 
@@ -215,7 +218,7 @@ public class Game
 
     public bool CanCollectCrystal(CO item)
     {
-        return item.type == CoreObject.Type.Crystal;
+        return turn != currCh.lastCrystalTurn && item.type == CoreObject.Type.Crystal;
     }
 
 }
