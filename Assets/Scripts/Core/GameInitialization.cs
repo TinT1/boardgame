@@ -160,13 +160,50 @@ public static class GameInitialization
 
         #endregion
 
+        #region crystal 
+        CO crystal = new CO("crystal", pickable: true,type: CO.Type.Weapon);
+        crystal.coEvents.Add(new COEvent(pickUpEvent));
+        crystal.coEvents.Add(new COEvent(	eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+                                            eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
+       
+        CO crystalHandler = new CO("crystalHandler", usable: true,
+                                 guiEvent: new COEvent(eventAction: delegate (CO character, CO caller, CO target) 
+                                         {
+                                             if (caller.GetInt("nbrOfCrystals") > 0)
+                                             {
+                                                 CO newMine = new CO(mine);
+                                                 newMine.coEvents.Add(new COEvent(
+                                                    eventTrigger: new EvTrig(type: EvTrig.Type.FinishTurn, roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 3),depth:2),
+                                                    eventAction: delegate (CO character2, CO caller2, CO target2) 
+                                                        {
+                                                            caller2.environmentOwner.SetInt("nbrOfCrystals", caller2.environmentOwner.GetInt("nbrOfCrystals") + 1);
+                                                            game.DestroyCO(caller2);
+                                                        }
+                                                    ));
+                                                 caller.AddToEnvironment(newMine, character.currentField);
+                                                 caller.SetInt("nbrOfMines", caller.GetInt("nbrOfMines") - 1);
+                                        
+                                             }
+                                         },eventTrigger:new EvTrig()),
+                                range: new CO.CORange(new List<Coor>() { new Coor(0, 0) }),
+                                type: CO.Type.Weapon);
+
+        crystalHandler.SetInt("nbrOfCrystals", 0);
+
+			
+      
+
+	#endregion
+
         #region itemPlacer
         CO itemPlacer = new CO("ItemPlacer");
         itemPlacer.coEvents.Add(new COEvent(eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Start)),
                                                 eventAction: delegate (CO character, CO caller, CO target) {
                                                     System.Random rnd = new System.Random();
                                                     if(rnd.NextDouble()>0.9f)game.board.TryRandomPlace(new CO(catapult));
+                                                    if(rnd.NextDouble()>0.9f)game.board.TryRandomPlace(new CO(crystal));
                                                 }));
+
 
         game.gameObjects.Add(itemPlacer);
 
