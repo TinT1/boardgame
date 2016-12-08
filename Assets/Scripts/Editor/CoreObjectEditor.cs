@@ -51,6 +51,14 @@ public static class CoreObjectEditor
         foreach (CO envObj in co.environment)
             PrintCOLess(envObj, depth + 1);
 
+        if (co.coEvents.Count != 0) EditorGUILayout.LabelField("events:");
+        foreach (COEvent ev in co.coEvents)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(20 * (depth+1));
+            EditorGUILayout.LabelField(ev.Print());
+            GUILayout.EndHorizontal();
+        }
         GUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
       //  GUILayout.EndHorizontal();

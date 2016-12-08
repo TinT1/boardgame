@@ -22,6 +22,8 @@ public partial class CoreObject
     public int health;
     public int crystals;
     public int lastCrystalTurn;
+    public int crystalUltaTreshold;
+    public COEvent ulta;
 
 
     public COEvent guiEvent;
@@ -81,6 +83,8 @@ public partial class CoreObject
                         int health = 2,
                         int crystals = 0,
                         int lastCrystalTurn = -1,
+                        int crystalUltaTreshold = 1,
+                        COEvent ulta = null,
                         COEvent guiEvent =null,
                         List<COEvent> eventAction = null,
                         bool block = false,
@@ -96,8 +100,10 @@ public partial class CoreObject
         this.pickUpOnMaxStep = pickUpOnMaxStep;
         this.health = health;
         this.crystals = crystals;
+        this.crystalUltaTreshold = crystalUltaTreshold;
         this.lastCrystalTurn = lastCrystalTurn;
-        if(guiEvent!=null)this.guiEvent = new COEvent(guiEvent);
+        if (ulta!= null) this.ulta= new COEvent(ulta);
+        if (guiEvent!=null)this.guiEvent = new COEvent(guiEvent);
 
         if (coEvents == null) this.coEvents = new List<COEvent>();
         else { this.coEvents = new List<COEvent>(); coEvents.ForEach(coEvent => this.coEvents.Add(new COEvent(coEvent))); }
@@ -122,7 +128,9 @@ public partial class CoreObject
         if (stepPattern == null) this.stepPattern = defaultStepPattern; else this.stepPattern = co.stepPattern;
         this.health = co.health;
         this.crystals = co.crystals;
+        this.crystalUltaTreshold = co.crystalUltaTreshold;
         this.lastCrystalTurn = co.lastCrystalTurn;
+        if (co.ulta!= null) this.ulta= new COEvent(co.ulta);
         this.pickUpOnMaxStep = co.pickUpOnMaxStep;
         if (co.guiEvent != null) this.guiEvent = new COEvent(co.guiEvent);
 
@@ -179,7 +187,6 @@ public partial class CoreObject
 
         for (int i = this.items.Count - 1; i >= 0; --i)
             this.items[i].ExecEventAction(eventType, round, step, maxStep, character, coTriggerer,target,depth+1);
-
     }
 
 }

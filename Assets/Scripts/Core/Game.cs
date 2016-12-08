@@ -70,11 +70,7 @@ public class Game
         System.Random rand = new System.Random();
         dice = rand.Next(0, currCh.stepPattern.Length - 1);
         maxStep = currCh.stepPattern[dice];
-        
-        
         ExecEventAction();
-
-        
     }
 
     #region actions
@@ -205,6 +201,12 @@ public class Game
         currCh.crystals++;
         currCh.lastCrystalTurn = turn;
         Board.Remove(item);
+
+        if (currCh.crystalUltaTreshold <= currCh.crystals)
+        {
+            currCh.crystals = 0;
+            currCh.coEvents.Add(currCh.ulta);
+        }
     }
 
 
@@ -220,5 +222,4 @@ public class Game
     {
         return turn != currCh.lastCrystalTurn && item.type == CoreObject.Type.Crystal;
     }
-
 }

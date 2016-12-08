@@ -120,6 +120,8 @@ public class GameGui : MonoBehaviour
 
         if (game.CanFinishTurn() == false) GUI.skin=skins["FinishTurnPassive"];
 
+        if (GUI.Button(new Rect((Board.n - 1 + 1) * fieldW, (Board.n) * fieldH, fieldW, fieldH), "Skip4Turns"))
+        { game.FinishTurn(); game.FinishTurn(); game.FinishTurn(); game.FinishTurn(); }
         if (GUI.Button(new Rect((Board.n-1) * fieldW, (Board.n ) *fieldH, fieldW, fieldH),"FinishTurn")) game.FinishTurn();
         GUI.Box(new Rect((Board.n-2) * fieldW, (Board.n)  * fieldH, fieldW, fieldH), (game.dice+1)+":"+game.maxStep+":"+game.step);
         GUI.Box(new Rect((Board.n - 3) * fieldW, (Board.n) * fieldH, fieldW, fieldH), "round:"+game.round);

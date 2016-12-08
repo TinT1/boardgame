@@ -90,5 +90,7 @@ public class COEventTrigger
                 &&  roundDes.IsTriggered(round, -1) 
                 &&  stepDes.IsTriggered(step, maxStep);
     }
+
+    public string Print() { return "TriggerPrint(replace)"; }
 }
 
