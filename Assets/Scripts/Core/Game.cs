@@ -124,6 +124,19 @@ public class Game
         Damage(target);
     }
 
+    public void DamageAndRepositionToField(CoreObject target, Field f)
+    {
+        foreach (CO CObject in f.fieldObjects)
+        {
+            if (CObject.name == "wall") f = target.currentField;
+            if (CObject.type == CO.Type.Character) this.DamageAndReposionToBase(CObject);
+            break;
+        }
+        Board.Move(target, f);
+        
+        Damage(target);
+    }
+
     public void MoveCurrChDamageAndReposionToBase(CoreObject target)
     {
         Field f = target.currentField;

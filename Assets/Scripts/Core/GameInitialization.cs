@@ -145,7 +145,27 @@ public static class GameInitialization
                                             eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
 
         #endregion
+        #region shotgun
+        CO shotgun = new CO("shotgun", pickable: true,
+                            guiEvent: new COEvent(name: "ShotgunDmg", eventAction: delegate (CO character, CO caller, CO target) {
+                                int TargetI = target.currentField.coordinates.i;
+                                int TargetJ = target.currentField.coordinates.j;
+                                int CurrentI = character.currentField.coordinates.i;
+                                int CurrentJ = character.currentField.coordinates.j;
+                                if (CurrentI < target.currentField.coordinates.i)TargetI = target.currentField.coordinates.i + 1;
+                                else if (CurrentI > target.currentField.coordinates.i)TargetI = target.currentField.coordinates.i - 1;
+                                if (CurrentJ < target.currentField.coordinates.j)TargetJ = target.currentField.coordinates.j + 1;
+                                else if (CurrentJ > target.currentField.coordinates.j)TargetJ = target.currentField.coordinates.j - 1;
 
+                                game.DamageAndRepositionToField(target, game.board[TargetI,TargetJ]);
+                            },
+                                                  eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
+                            range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(-1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(0, -1), new Coor(1, -1), new Coor(-1, -1) }),
+                            type: CO.Type.Weapon);
+        shotgun.coEvents.Add(new COEvent(pickUpEvent));
+        shotgun.coEvents.Add(new COEvent(name: "DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+                                            eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
+        #endregion
         #region bowAndArrow
         CO bowAndArrow = new CO("bowandarrow",
                             /* endAction: delegate (CO character, CO caller, CO target)
@@ -235,6 +255,6 @@ public static class GameInitialization
         game.characters.Add(crveni);
         game.characters.Add(crni);
         game.characters.Add(zuti);
-        Board.Place(new CO(catapult), game.board[5, 5]);
+        Board.Place(new CO(shotgun), game.board[5, 5]);
     }
 }
