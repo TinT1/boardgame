@@ -177,6 +177,20 @@ public static class GameInitialization
 
         #endregion
 
+
+        #region laser
+      CO laser = new CO("laser", pickable: true,
+			   guiEvent:new COEvent(name:"LaserDmg", eventAction: delegate (CO character, CO caller, CO target) { game.DamageAndReposionToBase(target); },
+						eventTrigger: new EvTrig(stepDes:new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
+			  range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(-1, 1),  new Coor(1, -1), new Coor(-1, -1) }),
+			  type: CO.Type.Weapon);
+
+      laser.coEvents.Add(new COEvent(pickUpEvent));
+
+      laser.coEvents.Add(new COEvent(name:"DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+					  eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
+     #endregion
+
         #region crystal 
 
        
@@ -191,6 +205,7 @@ public static class GameInitialization
                                                 eventAction: delegate (CO character, CO caller, CO target) {
                                                     System.Random rnd = new System.Random();
                                                     if(rnd.NextDouble()>0.9f)game.board.TryRandomPlace(new CO(catapult));
+                                                    if(rnd.NextDouble()>0.9f)game.board.TryRandomPlace(new CO(laser));
                                                     if (game.crystalsOnBoard < 3) { game.crystalsOnBoard++; game.board.TryRandomPlace(new CO(crystal)); }
                                                 }));
 
