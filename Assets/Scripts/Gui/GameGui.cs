@@ -48,7 +48,7 @@ public class GameGui : MonoBehaviour
                    
                     GUI.Box(new Rect(i * fieldW, j * fieldH, fieldW, fieldH), "");
                     Rect nameRect = new Rect( i * fieldW, j * fieldH, ratio * fieldW, fieldH);
-                    Rect atacckRect = new Rect(i * fieldW + nameRect.width, j * fieldH, (1f-ratio)*fieldW, fieldH);
+                    Rect attackRect = new Rect(i * fieldW + nameRect.width, j * fieldH, (1f-ratio)*fieldW, fieldH);
 
 
                      for(int fieldObjectIndex=0; boardField.fieldObjects.Count ==0 || fieldObjectIndex<boardField.fieldObjects.Count;++fieldObjectIndex)

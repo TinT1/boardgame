@@ -148,16 +148,8 @@ public static class GameInitialization
         #region shotgun
         CO shotgun = new CO("shotgun", pickable: true,
                             guiEvent: new COEvent(name: "ShotgunDmg", eventAction: delegate (CO character, CO caller, CO target) {
-                                int TargetI = target.currentField.coordinates.i;
-                                int TargetJ = target.currentField.coordinates.j;
-                                int CurrentI = character.currentField.coordinates.i;
-                                int CurrentJ = character.currentField.coordinates.j;
-                                if (CurrentI < target.currentField.coordinates.i)TargetI = target.currentField.coordinates.i + 1;
-                                else if (CurrentI > target.currentField.coordinates.i)TargetI = target.currentField.coordinates.i - 1;
-                                if (CurrentJ < target.currentField.coordinates.j)TargetJ = target.currentField.coordinates.j + 1;
-                                else if (CurrentJ > target.currentField.coordinates.j)TargetJ = target.currentField.coordinates.j - 1;
-
-                                game.DamageAndRepositionToField(target, game.board[TargetI,TargetJ]);
+                                Coor newCoor = target.currentField.coordinates + (target.currentField.coordinates - character.currentField.coordinates);
+                                game.DamageAndRepositionToField(target, game.board[newCoor.i,newCoor.j]);
                             },
                                                   eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
                             range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(-1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(0, -1), new Coor(1, -1), new Coor(-1, -1) }),
@@ -220,6 +212,30 @@ public static class GameInitialization
         CO zuti = new CO("Y");
         zuti.items.Add(wallPlacer);
 
+        COEvent zutiUlta = new COEvent(name: "YellowUlt",
+            eventTrigger: new EvTrig(EvTrig.Type.FinishTurn),
+            eventAction: delegate (CO character, CO caller, CO target) {
+                caller.AddToEnvironment(new CO(wall), game.board.fields[1, 1]);
+                caller.AddToEnvironment(new CO(wall), game.board.fields[1, Board.n - 2]);
+                caller.AddToEnvironment(new CO(wall), game.board.fields[Board.n - 2, 1]);
+                caller.AddToEnvironment(new CO(wall), game.board.fields[Board.n - 2, Board.n - 2]);
+                int m = Board.n / 2;
+                List<int> ms = new List<int>() { m, m + 1, m - 1 };
+                for (int t = 0; t < 3; ++t)
+                {
+                    m = ms[t];
+                    caller.AddToEnvironment(new CO(wall), game.board.fields[1, m]);
+                    caller.AddToEnvironment(new CO(wall), game.board.fields[m, 1]);
+                    caller.AddToEnvironment(new CO(wall), game.board.fields[Board.n - 2, m]);
+                    caller.AddToEnvironment(new CO(wall), game.board.fields[m, Board.n - 2]);
+                }
+
+                caller.coEvents.RemoveAll(x => x.name == caller.ulta.name);
+            });
+
+        zuti.ulta = zutiUlta;
+
+
         CO plavi = new CO("B", new int[] { 1, 1, 2, 3, 4, 6 }, blockFree: new List<CO.Type>() { CO.Type.Environment });
 
 
@@ -233,36 +249,34 @@ public static class GameInitialization
 
         CO zeleni = new CO("G");
 
-        COEvent zutiUlta = new COEvent(name:"YellowUlt",
+        zeleni.items.Add(minePlacer);
+        zeleni.items.Add(bigMinePlacer);
+
+        COEvent zeleniUlta = new COEvent(name: "GreenUlt",
             eventTrigger: new EvTrig(EvTrig.Type.FinishTurn),
             eventAction: delegate (CO character, CO caller, CO target) {
-                caller.AddToEnvironment(new CO(wall), game.board.fields[1,1] );
-                caller.AddToEnvironment(new CO(wall), game.board.fields[1,Board.n-2]);
-                caller.AddToEnvironment(new CO(wall), game.board.fields[Board.n - 2,1]);
-                caller.AddToEnvironment(new CO(wall), game.board.fields[Board.n - 2, Board.n - 2]);
-                int m = Board.n / 2;
-                List<int> ms = new List<int>() { m, m + 1, m - 1 };
-                for (int t = 0; t < 3; ++t)
+
+                CO ultaMine = new CO(bigMine);
+
+                ultaMine.coEvents.Add(new COEvent(
+                   eventTrigger: new EvTrig(type: EvTrig.Type.FinishTurn, roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 1), depth: 2),
+                   eventAction: delegate (CO character2, CO caller2, CO target2)
+                        {
+                            game.DestroyCO(caller2);
+                        }
+                        ));
+
+                for (int m = 0; m < 6; ++m)
                 {
-                    m = ms[t];
-                    caller.AddToEnvironment(new CO(wall), game.board.fields[1, m]);
-                    caller.AddToEnvironment(new CO(wall), game.board.fields[m, 1]);
-                    caller.AddToEnvironment(new CO(wall), game.board.fields[Board.n - 2, m]);
-                    caller.AddToEnvironment(new CO(wall), game.board.fields[m, Board.n - 2]);
+                    CO newMine = new CO(ultaMine);
+                    game.board.TryRandomPlace(newMine);
+                    character.Own(newMine);
                 }
-                Debug.Log("zuti ulta");
-                //caller.ulta = null;
-                // to
-                //treba biti nemogu staviti strelicu desno (moglo bi samo remove() ali mislim da remove gleda doslovno dal je isti obj,
-                // a to nikad nece biti jer uvijek radi kopiju dok ultu stavlja u coEvents a operator == ... nisam siguran kak je def
-                // ali ovo bude sigurno radilo
+
                 caller.coEvents.RemoveAll(x => x.name == caller.ulta.name);
             });
 
-        zuti.ulta = zutiUlta;
-
-        zeleni.items.Add(minePlacer);
-        zeleni.items.Add(bigMinePlacer);
+        zeleni.ulta = zeleniUlta;
 
         #endregion
 
@@ -272,4 +286,5 @@ public static class GameInitialization
         game.characters.Add(zuti);
         Board.Place(new CO(shotgun), game.board[5, 5]);
     }
+
 }

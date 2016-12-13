@@ -61,11 +61,14 @@ public partial class CoreObject
     {
         //        Debug.Log(co.name + field.coordinates.i + field.coordinates.j);
         Board.Place(co, field);
+        Own(co);
+    }
 
+    public void Own(CO co)
+    {
         co.environmentOwner = this;
         environment.Add(co);
     }
-
 
     private int[] defaultStepPattern = new int[] { 1, 2, 3, 4, 5, 6 };
 

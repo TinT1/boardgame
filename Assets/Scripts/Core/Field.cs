@@ -23,7 +23,9 @@ public partial class Field
         type =      whiteBool ? Type.White : ( nullBool ? Type.Null : Type.Black);
     }
 
-   
+    public int i { get { return coordinates.i; } }
+    public int j { get { return coordinates.j; } }
+
     public static int CoordinateDistance(Field field1, Field field2)	{	return Coordinates.Distance(field1.coordinates, field2.coordinates);	}
     public static bool SameCoordinates(Field field1, Field field2)		{	return Coordinates.IsEqual(field1.coordinates, field2.coordinates);		}
 

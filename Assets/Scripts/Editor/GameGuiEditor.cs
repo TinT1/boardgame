@@ -9,7 +9,7 @@ public class GameGuiEditor : Editor {
     {
         GameGui gameGui = target as GameGui;
 
-        GameEditor.OnInspectorGUI(gameGui.game);
+        if(gameGui.game!=null)GameEditor.OnInspectorGUI(gameGui.game);
          
         
         //base.OnInspectorGUI();

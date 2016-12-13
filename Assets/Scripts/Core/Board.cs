@@ -21,6 +21,8 @@ public class Board//:IEnumerable<Field>
     }
     public static void Move(CoreObject coreObject, Field field)
     {
+        if (field.type == Field.Type.Null) return;
+
         field.fieldObjects.Add(coreObject);
         coreObject.previousField = coreObject.currentField;
         coreObject.currentField = field;
@@ -83,5 +85,19 @@ public class Board//:IEnumerable<Field>
         Place(coreObject, RandomField());
         return true;
     }
+/*
+    public bool isOnBoard(Field f) { return f.type != Field.Type.Null;  }
+
+
+    public Field rightField(Field f) { if (isOnBoard(new Field(f.i + 1, f.j))) return this[f.i + 1, f.j]; else return f; }
+    public Field leftField(Field f) { if (isOnBoard(new Field(f.i - 1, f.j))) return this[f.i - 1, f.j]; else return f; }
+    public Field upField(Field f) { if (isOnBoard(new Field(f.i, f.j + 1))) return this[f.i, f.j + 1]; else return f; }
+    public Field downField(Field f) { if (isOnBoard(new Field(f.i, f.j - 1))) return this[f.i, f.j - 1]; else return f; }
+
+    public Field rightUpField(Field f) { if (isOnBoard(new Field(f.i + 1, f.j + 1))) return this[f.i + 1, f.j + 1]; else return f; }
+    public Field leftUpField(Field f) { if (isOnBoard(new Field(f.i - 1, f.j + 1))) return this[f.i - 1, f.j + 1]; else return f; }
+    public Field rightDownField(Field f) { if (isOnBoard(new Field(f.i + 1, f.j - 1))) return this[f.i + 1, f.j - 1]; else return f; }
+    public Field leftDownField(Field f) { if (isOnBoard(new Field(f.i - 1, f.j - 1))) return this[f.i - 1, f.j - 1]; else return f; }
+    */
 
 }
