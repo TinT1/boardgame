@@ -51,15 +51,20 @@ public class GameGui : MonoBehaviour
                     Rect attackRect = new Rect(i * fieldW + nameRect.width, j * fieldH, (1f-ratio)*fieldW, fieldH);
 
 
-                     for(int fieldObjectIndex=0; boardField.fieldObjects.Count ==0 || fieldObjectIndex<boardField.fieldObjects.Count;++fieldObjectIndex)
+                    int visibleObjsCount = 0;
+                    boardField.fieldObjects.ForEach(x => visibleObjsCount += x.IsVisibleTo(game.currCh) ? 1:0);
+
+
+                     for(int fieldObjectIndex=0; boardField.fieldObjects.Count==0 ||  fieldObjectIndex<boardField.fieldObjects.Count;++fieldObjectIndex)
                         {
-                            float div       = (boardField.fieldObjects.Count == 0) ? 1f : (1f / (float)boardField.fieldObjects.Count);
+
+                            float div       = (visibleObjsCount == 0) ? 1f : (1f / (float)visibleObjsCount);
                             float postotak  = fieldObjectIndex * div;
 
                             nameRect = new Rect(i * fieldW, (j+ postotak) * fieldH, ratio * fieldW , fieldH*div);
 
 
-                            buttonLabel = (boardField.fieldObjects.Count == 0) ? "":boardField.fieldObjects[fieldObjectIndex].name;
+                            buttonLabel = (visibleObjsCount == 0) ? "":boardField.fieldObjects[fieldObjectIndex].name;
 
                             if (game.currCh.GetState == CO.State.Move)      buttonLabel += game.CanCurrentCharacterMove(board[i,j])?"*":"";
                             if (game.currCh.GetState == CO.State.UseItem)   buttonLabel += game.CanCurrentCharacterUseItem(boardField) ? "XY" : "";

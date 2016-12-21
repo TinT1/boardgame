@@ -35,11 +35,12 @@ public partial class CoreObject
 
     public bool usable;
     public bool pickable;
+    public bool publicVisibility;
 
     public bool canStepOnPrevious;
 
     public CORange range;
-
+    
 
     //---------------
 
@@ -70,6 +71,11 @@ public partial class CoreObject
         environment.Add(co);
     }
 
+    public bool IsVisibleTo(CO co)
+    {
+       return this.publicVisibility || this == co || this.BelongsTo(co); 
+    }
+   
     private int[] defaultStepPattern = new int[] { 1, 2, 3, 4, 5, 6 };
 
     Dictionary<String, COData> additionalVars = new Dictionary<string, COData>();
@@ -94,6 +100,7 @@ public partial class CoreObject
                         List<Type> blockFree = null,
                         bool usable = false,
                         bool pickable = false,
+                        bool publicVisibility = true,
                         bool canStepOnPrevious = false,
                         CORange range = null,
                         Type type = Type.Character)
@@ -116,6 +123,7 @@ public partial class CoreObject
 
         this.usable = usable;
         this.pickable = pickable;
+        this.publicVisibility = publicVisibility;
 
         this.canStepOnPrevious = canStepOnPrevious;
         if (range == null) this.range = new CORange(); else this.range = range;
@@ -145,6 +153,7 @@ public partial class CoreObject
 
         this.usable = co.usable;
         this.pickable = co.pickable;
+        this.publicVisibility = co.publicVisibility;
 
         this.canStepOnPrevious = co.canStepOnPrevious;
 

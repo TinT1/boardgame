@@ -47,7 +47,7 @@ public static class GameInitialization
 
         #region minePlacer
 
-        CO mine = new CO("mine", type: CO.Type.Weapon);
+        CO mine = new CO("mine", type: CO.Type.Weapon,publicVisibility:false);
         mine.coEvents.Add(new COEvent(name:"MineDmg", eventAction: delegate (CO character, CO caller, CO target)
         {// Debug.Log(character.currentField.Print()+" "+ caller.currentField.Print()+" "+target.currentField.Print()); 
             if (caller.BelongsTo(target)==false)
@@ -64,7 +64,7 @@ public static class GameInitialization
 
 
 
-        CO bigMine = new CO("bigMine", type: CO.Type.Weapon);
+        CO bigMine = new CO("bigMine", type: CO.Type.Weapon,publicVisibility:false);
         bigMine.coEvents.Add(new COEvent(name:"BigMineDmg", eventAction: delegate (CO character, CO caller, CO target)
         {// Debug.Log(character.currentField.Print()+" "+ caller.currentField.Print()+" "+target.currentField.Print()); 
             if (caller.BelongsTo(target) == false)
