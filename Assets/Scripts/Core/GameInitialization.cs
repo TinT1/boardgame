@@ -15,18 +15,24 @@ public static class GameInitialization
         #region Objects
         //  CO wall = new CO();
 
+        CO.CORange defaultRange = new CO.CORange(positions: new List<Coor> {new Coor(-1,0), new Coor(1, 0), new Coor(0, -1), new Coor(0, 1),
+                                                                             new Coor(-1,-1), new Coor(1, 1), new Coor(-1, 1), new Coor(1, -1) });
+
+        CO.CORange jumpRange = new CO.CORange(positions: new List<Coor>());
+        defaultRange.positions.ForEach(coor => jumpRange.positions.Add(2 * coor));
+
         #region pickupEvent
-        COEvent pickUpEvent = new COEvent(name:"pickup",
+        COEvent pickUpEvent = new COEvent(name: "pickup",
             eventTrigger: new EvTrig(EvTrig.Type.Pickup),
             eventAction: delegate (CO character, CO caller, CO target) {
 
-                caller.coEvents.Add(new COEvent(name:"usableOn",
+                caller.coEvents.Add(new COEvent(name: "usableOn",
                     eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start),
                                                 roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 1)),
-                    eventAction: delegate (CO character2, CO caller2, CO target2) { caller2.usable = true;}
+                    eventAction: delegate (CO character2, CO caller2, CO target2) { caller2.usable = true; }
                     ));
 
-                caller.coEvents.Add(new COEvent(name:"DestroyAfterPickup",
+                caller.coEvents.Add(new COEvent(name: "DestroyAfterPickup",
                     eventTrigger: new EvTrig(type: EvTrig.Type.FinishTurn, roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 1)),
                     eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }
                     ));
@@ -35,66 +41,64 @@ public static class GameInitialization
 
         #region wallAndwallPlacer
         CO wall = new CO("wall", block: true, type: CO.Type.Environment);
-        wall.coEvents.Add(new COEvent(name:"WallSelfdestruct", eventAction: delegate (CO character, CO caller, CO target) { game.DestroyCO(caller); },
+        wall.coEvents.Add(new COEvent(name: "WallSelfdestruct", eventAction: delegate (CO character, CO caller, CO target) { game.DestroyCO(caller); },
                                         eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start), depth: 2)));
 
         CO wallPlacer = new CO("wallPlacer");
-        wallPlacer.coEvents.Add(new COEvent(name:"PlaceWall", eventAction: delegate (CO character, CO caller, CO target) { if (character.previousField != null) caller.AddToEnvironment(new CO(wall), character.previousField); else Debug.Log("nowall"); },
+        wallPlacer.coEvents.Add(new COEvent(name: "PlaceWall", eventAction: delegate (CO character, CO caller, CO target) { if (character.previousField != null) caller.AddToEnvironment(new CO(wall), character.previousField); else Debug.Log("nowall"); },
                                                 eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Range, start: 1))));
 
 
         #endregion
 
         #region minePlacer
-
-        CO mine = new CO("mine", type: CO.Type.Weapon,publicVisibility:false);
-        mine.coEvents.Add(new COEvent(name:"MineDmg", eventAction: delegate (CO character, CO caller, CO target)
-        {// Debug.Log(character.currentField.Print()+" "+ caller.currentField.Print()+" "+target.currentField.Print()); 
-            if (caller.BelongsTo(target)==false)
-            {
-                game.DamageAndReposionToBase(target);
-                caller.environmentOwner.SetInt("nbrOfMines", caller.environmentOwner.GetInt("nbrOfMines") + 1);
-                game.DestroyCO(caller);
-                   
-            }
-
         
-
-        }, eventTrigger: new EvTrig(EvTrig.Type.StepOnField)));
-
-
-
-        CO bigMine = new CO("bigMine", type: CO.Type.Weapon,publicVisibility:false);
-        bigMine.coEvents.Add(new COEvent(name:"BigMineDmg", eventAction: delegate (CO character, CO caller, CO target)
-        {// Debug.Log(character.currentField.Print()+" "+ caller.currentField.Print()+" "+target.currentField.Print()); 
+        
+        CO mine = new CO("mine", type: CO.Type.Weapon, publicVisibility: false);
+        mine.coEvents.Add(new COEvent(name: "MineDmg", eventAction: delegate (CO character, CO caller, CO target)
+         {// Debug.Log(character.currentField.Print()+" "+ caller.currentField.Print()+" "+target.currentField.Print()); 
             if (caller.BelongsTo(target) == false)
-            {
-                game.DamageAndReposionToBase(target);
-                game.DestroyCO(caller);
+             {
+                 game.DamageAndReposionToBase(target);
+                 caller.environmentOwner.SetInt("nbrOfMines", caller.environmentOwner.GetInt("nbrOfMines") + 1);
+                 game.DestroyCO(caller);
 
-            }
+             }
 
-        }, eventTrigger: new EvTrig(EvTrig.Type.StepOnField)));
+
+         }, eventTrigger: new EvTrig(EvTrig.Type.StepOnField)));
+
+        CO bigMine = new CO("bigMine", type: CO.Type.Weapon, publicVisibility: false);
+        bigMine.coEvents.Add(new COEvent(name: "BigMineDmg", eventAction: delegate (CO character, CO caller, CO target)
+         {// Debug.Log(character.currentField.Print()+" "+ caller.currentField.Print()+" "+target.currentField.Print()); 
+            if (caller.BelongsTo(target) == false)
+             {
+                 game.DamageAndReposionToBase(target);
+                 game.DestroyCO(caller);
+
+             }
+
+         }, eventTrigger: new EvTrig(EvTrig.Type.StepOnField)));
 
         CO minePlacer = new CO("smallMinePlacer", usable: true,
-                                 guiEvent: new COEvent(name:"PlaceMine", eventAction: delegate (CO character, CO caller, CO target) 
-                                         {
-                                             if (caller.GetInt("nbrOfMines") > 0)
-                                             {
-                                                 CO newMine = new CO(mine);
-                                                 newMine.coEvents.Add(new COEvent(
-                                                    eventTrigger: new EvTrig(type: EvTrig.Type.FinishTurn, roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 3),depth:2),
-                                                    eventAction: delegate (CO character2, CO caller2, CO target2) 
-                                                        {
-                                                            caller2.environmentOwner.SetInt("nbrOfMines", caller2.environmentOwner.GetInt("nbrOfMines") + 1);
-                                                            game.DestroyCO(caller2);
-                                                        }
-                                                    ));
-                                                 caller.AddToEnvironment(newMine, character.currentField);
-                                                 caller.SetInt("nbrOfMines", caller.GetInt("nbrOfMines") - 1);
-                                        
-                                             }
-                                         },eventTrigger:new EvTrig()),
+                                 guiEvent: new COEvent(name: "PlaceMine", eventAction: delegate (CO character, CO caller, CO target)
+                                          {
+                                              if (caller.GetInt("nbrOfMines") > 0)
+                                              {
+                                                  CO newMine = new CO(mine);
+                                                  newMine.coEvents.Add(new COEvent(
+                                                     eventTrigger: new EvTrig(type: EvTrig.Type.FinishTurn, roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 3), depth: 2),
+                                                     eventAction: delegate (CO character2, CO caller2, CO target2)
+                                                         {
+                                                             caller2.environmentOwner.SetInt("nbrOfMines", caller2.environmentOwner.GetInt("nbrOfMines") + 1);
+                                                             game.DestroyCO(caller2);
+                                                         }
+                                                     ));
+                                                  caller.AddToEnvironment(newMine, character.currentField);
+                                                  caller.SetInt("nbrOfMines", caller.GetInt("nbrOfMines") - 1);
+
+                                              }
+                                          }, eventTrigger: new EvTrig()),
                                 range: new CO.CORange(new List<Coor>() { new Coor(0, 0) }),
                                 type: CO.Type.Weapon);
 
@@ -111,7 +115,7 @@ public static class GameInitialization
 
                                                             }
                                                         },
-                                                      eventTrigger:new EvTrig()),
+                                                      eventTrigger: new EvTrig()),
                                range: new CO.CORange(new List<Coor>() { new Coor(0, 0) }),
                                type: CO.Type.Weapon);
 
@@ -121,8 +125,8 @@ public static class GameInitialization
 
         #region devour
         CO devour = new CO("devour", usable: true,
-                            guiEvent: new COEvent(  eventAction: delegate (CO character, CO caller, CO target) { game.MoveCurrChDamageAndReposionToBase(target); },
-                                                    eventTrigger:new EvTrig()),
+                            guiEvent: new COEvent(eventAction: delegate (CO character, CO caller, CO target) { game.MoveCurrChDamageAndReposionToBase(target); },
+                                                    eventTrigger: new EvTrig()),
                             range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(-1, 1), new Coor(-1, -1), new Coor(0, -1), new Coor(1, -1) }),
                             type: CO.Type.Weapon);
 
@@ -134,14 +138,15 @@ public static class GameInitialization
 
         #region catapult
         CO catapult = new CO("catapult", pickable: true,
-                             guiEvent:new COEvent(name:"CatapultDmg", eventAction: delegate (CO character, CO caller, CO target) { game.DamageAndReposionToBase(target); },
-                                                  eventTrigger: new EvTrig(stepDes:new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
+                             guiEvent: new COEvent(name: "CatapultDmg", eventAction: delegate (CO character, CO caller, CO target) { game.DamageAndReposionToBase(target); },
+                                                  eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
                             range: new CO.CORange(new List<Coor>() { new Coor(2, 2), new Coor(-2, 2), new Coor(2, 0), new Coor(0, 2), new Coor(-2, 0), new Coor(0, -2), new Coor(2, -2), new Coor(-2, -2) }),
                             type: CO.Type.Weapon);
-
+        //ovak nesto?
+        // bolje mina. svejedno
         catapult.coEvents.Add(new COEvent(pickUpEvent));
 
-        catapult.coEvents.Add(new COEvent(name:"DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+        catapult.coEvents.Add(new COEvent(name: "DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
                                             eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
 
         #endregion
@@ -149,7 +154,7 @@ public static class GameInitialization
         CO shotgun = new CO("shotgun", pickable: true,
                             guiEvent: new COEvent(name: "ShotgunDmg", eventAction: delegate (CO character, CO caller, CO target) {
                                 Coor newCoor = target.currentField.coordinates + (target.currentField.coordinates - character.currentField.coordinates);
-                                game.DamageAndRepositionToField(target, game.board[newCoor.i,newCoor.j]);
+                                game.DamageAndRepositionToField(target, game.board[newCoor.i, newCoor.j]);
                             },
                                                   eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
                             range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(-1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(0, -1), new Coor(1, -1), new Coor(-1, -1) }),
@@ -171,33 +176,33 @@ public static class GameInitialization
 
 
         #region laser
-      CO laser = new CO("laser", pickable: true,
-			   guiEvent:new COEvent(name:"LaserDmg", eventAction: delegate (CO character, CO caller, CO target) { game.DamageAndReposionToBase(target); },
-						eventTrigger: new EvTrig(stepDes:new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
-			  range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(-1, 1),  new Coor(1, -1), new Coor(-1, -1) }),
-			  type: CO.Type.Weapon);
+        CO laser = new CO("laser", pickable: true,
+                 guiEvent: new COEvent(name: "LaserDmg", eventAction: delegate (CO character, CO caller, CO target) { game.DamageAndReposionToBase(target); },
+                          eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
+                range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(-1, 1), new Coor(1, -1), new Coor(-1, -1) }),
+                type: CO.Type.Weapon);
 
-      laser.coEvents.Add(new COEvent(pickUpEvent));
+        laser.coEvents.Add(new COEvent(pickUpEvent));
 
-      laser.coEvents.Add(new COEvent(name:"DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
-					  eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
-     #endregion
+        laser.coEvents.Add(new COEvent(name: "DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+                        eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
+        #endregion
 
         #region crystal 
 
-       
+
 
         CO crystal = new CO("crystal", type: CO.Type.Crystal);
 
-	#endregion
+        #endregion
 
         #region itemPlacer
         CO itemPlacer = new CO("ItemPlacer");
         itemPlacer.coEvents.Add(new COEvent(eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Start)),
                                                 eventAction: delegate (CO character, CO caller, CO target) {
                                                     System.Random rnd = new System.Random();
-                                                    if(rnd.NextDouble()>0.9f)game.board.TryRandomPlace(new CO(catapult));
-                                                    if(rnd.NextDouble()>0.9f)game.board.TryRandomPlace(new CO(laser));
+                                                    if (rnd.NextDouble() > 0.9f) game.board.TryRandomPlace(new CO(catapult));
+                                                    if (rnd.NextDouble() > 0.9f) game.board.TryRandomPlace(new CO(laser));
                                                     if (game.crystalsOnBoard < 3) { game.crystalsOnBoard++; game.board.TryRandomPlace(new CO(crystal)); }
                                                 }));
 
@@ -234,11 +239,46 @@ public static class GameInitialization
             });
 
         zuti.ulta = zutiUlta;
+        CO rozi = new CO("Pi");
+        rozi.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target) { caller.ClearStepHistory(); Debug.Log("clear step h"); },
+                                            eventTrigger: new EvTrig(roundDes: new EvTrig.Description(period: 1, pShift: 0),
+                                                                        stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: 0))));
 
+        CO jumper = new CO("jumper", pickable: true, usable:true,
+                             guiEvent: new COEvent(name: "Jumper", eventAction: delegate (CO character, CO caller, CO target) 
+                             {
+                                 Debug.Log("jumper guievent");
+                                 game.currCh.range = new CO.CORange(jumpRange);
 
+                             },
+                                                  eventTrigger: new EvTrig()),
+                            range: new CO.CORange(new List<Coor>() { new Coor(0,0)}),
+                            type: CO.Type.Weapon);
+
+        rozi.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target){
+            character.stepHistory.Add(character.previousField==null ? new Field.Coordinates(0,0) : 
+                                                                      (character.currentField.coordinates - character.previousField.coordinates));
+            if (caller.GratisStep())
+            {
+                game.maxStep++;
+            }
+            Debug.Log("step rozi");
+        },
+        eventTrigger: new EvTrig()
+        ));
+
+        rozi.items.Add(jumper);
+
+        COEvent roziUlta = new COEvent(name: "roziUlt",
+            eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Start),
+                                    roundDes: new EvTrig.Description(exact: game.round + 1)),
+            eventAction: delegate (CO character, CO caller, CO target) {
+            });
+        rozi.ulta = roziUlta;
+        
         CO plavi = new CO("B", new int[] { 1, 1, 2, 3, 4, 6 }, blockFree: new List<CO.Type>() { CO.Type.Environment });
 
-
+    
         CO crveni = new CO("R");
         crveni.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target) { caller.items.Add(devour); },
                                             eventTrigger: new EvTrig(roundDes: new EvTrig.Description(period: 3, pShift: 2),
@@ -280,9 +320,20 @@ public static class GameInitialization
 
         #endregion
 
-        game.characters.Add(zeleni);
+
+        // znaci sad bi stavili event ultu, koji ubacuje "item" koji ima range, pogubljen sam dns
+        // za pocetak mozemo staviti taj item da ima od pocetka da tesitramo kako funkcionira item jumper za dodavanje jumpa
+        crveni.range=new CO.CORange(defaultRange);
+        zeleni.range = new CO.CORange(defaultRange);
+        zuti.range = new CO.CORange(defaultRange);
+        rozi.range = new CO.CORange(defaultRange);
+        crni.range = new CO.CORange(defaultRange);
+        plavi.range = new CO.CORange(defaultRange);
+        
+        game.characters.Add(rozi);
         game.characters.Add(crveni);
-        game.characters.Add(crni);
+
+        game.characters.Add(zeleni);
         game.characters.Add(zuti);
         Board.Place(new CO(shotgun), game.board[5, 5]);
     }

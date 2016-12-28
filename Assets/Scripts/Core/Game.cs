@@ -161,7 +161,7 @@ public class Game
 
     public bool CanMove(CO character, Field field)
     {
-        if (Field.CoordinateDistance(character.currentField, field) != 1) return false;
+        if (character.range.positions.TrueForAll(relativeCoos => Coor.IsEqual(character.currentField.coordinates + relativeCoos,field.coordinates)== false )) return false;
 
         foreach (CO target in field.fieldObjects)
             if (target.type == CoreObject.Type.Character && character.blockFree.Contains(CoreObject.Type.Character) == false) return false;

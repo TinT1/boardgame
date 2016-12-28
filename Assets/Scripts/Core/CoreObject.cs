@@ -7,8 +7,6 @@ using CO = CoreObject;
 
 public delegate void COAction(CoreObject character = null, CoreObject caller = null, CoreObject target = null);
 
-//*
-
 public partial class CoreObject
 {
     public Field currentField;
@@ -25,7 +23,6 @@ public partial class CoreObject
     public int crystalUltaTreshold;
     public COEvent ulta;
 
-
     public COEvent guiEvent;
 
     public List<COEvent> coEvents;
@@ -36,20 +33,27 @@ public partial class CoreObject
     public bool usable;
     public bool pickable;
     public bool publicVisibility;
-
     public bool canStepOnPrevious;
 
     public CORange range;
-    
-
-    //---------------
 
     public List<CO> items = new List<CO>();
     public CO equipedItem;
 
-
     public List<CO> environment = new List<CO>();
-
+    public bool gratisStep = false;
+    public List<Field.Coordinates> stepHistory = new List<Field.Coordinates>();
+    public void ClearStepHistory() { stepHistory.Clear(); gratisStep = true; }
+    public bool GratisStep() {
+        int l = stepHistory.Count;
+        bool check  = 2 < stepHistory.Count && Field.Coordinates.IsEqual(stepHistory[l - 1],stepHistory[l - 2]) && Field.Coordinates.IsEqual(stepHistory[l - 1], stepHistory[l - 3]);
+        if (check && gratisStep)
+        {
+            gratisStep = false;
+            return true;
+        }
+        return false;
+    }
     public CO environmentOwner;
 
     public bool BelongsTo(CO target)
@@ -60,7 +64,6 @@ public partial class CoreObject
 
     public void AddToEnvironment(CO co, Field field)
     {
-        //        Debug.Log(co.name + field.coordinates.i + field.coordinates.j);
         Board.Place(co, field);
         Own(co);
     }
@@ -73,9 +76,9 @@ public partial class CoreObject
 
     public bool IsVisibleTo(CO co)
     {
-       return this.publicVisibility || this == co || this.BelongsTo(co); 
+    return this.publicVisibility || this == co || this.BelongsTo(co); 
     }
-   
+
     private int[] defaultStepPattern = new int[] { 1, 2, 3, 4, 5, 6 };
 
     Dictionary<String, COData> additionalVars = new Dictionary<string, COData>();
@@ -99,8 +102,8 @@ public partial class CoreObject
                         bool block = false,
                         List<Type> blockFree = null,
                         bool usable = false,
-                        bool pickable = false,
                         bool publicVisibility = true,
+                        bool pickable = false,
                         bool canStepOnPrevious = false,
                         CORange range = null,
                         Type type = Type.Character)
@@ -128,13 +131,10 @@ public partial class CoreObject
         this.canStepOnPrevious = canStepOnPrevious;
         if (range == null) this.range = new CORange(); else this.range = range;
         this.type = type;
-
-
     }
 
     public CoreObject(CO co)
     {
-       
         this.name = co.name;
         if (stepPattern == null) this.stepPattern = defaultStepPattern; else this.stepPattern = co.stepPattern;
         this.health = co.health;
@@ -154,7 +154,6 @@ public partial class CoreObject
         this.usable = co.usable;
         this.pickable = co.pickable;
         this.publicVisibility = co.publicVisibility;
-
         this.canStepOnPrevious = co.canStepOnPrevious;
 
         if (co.range == null) this.range = new CORange(); 
@@ -171,48 +170,27 @@ public partial class CoreObject
     public void UnEquip()
     { equipedItem = null; }
 
-
     public enum State { Move, UseItem };
     public State GetState { get { return equipedItem == null ? State.Move : State.UseItem; } }
 
-
-
     public void ExecEventAction(COEventTrigger.Type eventType,int round, int step, int maxStep,CO character, CO coTriggerer ,CO target=null,int depth = 0)
     {
-        
-       // Debug.Log("CO:" + this.name + " triggerer:" + (coTriggerer == null ? "e" : coTriggerer.name)+ (coTriggerer == null || coTriggerer == this));
-       
         for (int i = this.environment.Count - 1; i >= 0; --i)
         {
            // Debug.Log("ExecEventAction(" + eventType+" this:"+this.name);
             this.environment[i].ExecEventAction(eventType, round, step, maxStep, character, coTriggerer, target,depth+1);
         }
 
-
         if(coTriggerer==null || coTriggerer == this)
         this.coEvents.ForEach(coEvent => 
             {
                 if (coEvent.eventTrigger.IsTriggered(eventType, round, step, maxStep,depth)) coEvent.eventAction(character, this, target);
             });
-        
-
 
         for (int i = this.items.Count - 1; i >= 0; --i)
             this.items[i].ExecEventAction(eventType, round, step, maxStep, character, coTriggerer,target,depth+1);
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
 
 public partial class CoreObject
 {

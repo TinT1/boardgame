@@ -58,6 +58,7 @@ public partial class Field
 		public static bool IsEqual(Coordinates cor1, Coordinates cor2)			{	return  cor1.i == cor2.i && cor2.j == cor1.j;						}
         public static Coordinates operator +(Coordinates c1, Coordinates c2)	{	return new Coordinates(c1.i + c2.i, c1.j + c2.j);					}
         public static Coordinates operator -(Coordinates c1, Coordinates c2)	{	return new Coordinates(c1.i - c2.i, c1.j - c2.j);					}
+        public static Coordinates operator *(int a, Coordinates c2)           	{	return new Coordinates(a* c2.i, a* c2.j);		         			}
         public static int Distance(Coordinates c1, Coordinates c2)				{	return Mathf.Max(Mathf.Abs(c1.i - c2.i), Mathf.Abs(c1.j - c2.j));	}
 	
         public string Print()													{	return "" + i + " " + j;											}
