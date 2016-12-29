@@ -130,9 +130,9 @@ public static class GameInitialization
                             range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(-1, 1), new Coor(-1, -1), new Coor(0, -1), new Coor(1, -1) }),
                             type: CO.Type.Weapon);
 
-        devour.coEvents.Add(new COEvent(eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+        devour.coEvents.Add(new COEvent(name: "DestroyDevourOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
                                     eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
-        devour.coEvents.Add(new COEvent(eventTrigger: new EvTrig(EvTrig.Type.FinishTurn),
+        devour.coEvents.Add(new COEvent(name: "DestroyDevourOnFinishTurn", eventTrigger: new EvTrig(EvTrig.Type.FinishTurn),
                                     eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
         #endregion
 
@@ -240,19 +240,25 @@ public static class GameInitialization
 
         zuti.ulta = zutiUlta;
         CO rozi = new CO("Pi");
-        rozi.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target) { caller.ClearStepHistory(); Debug.Log("clear step h"); },
+        rozi.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target) { caller.ClearStepHistory(); /*Debug.Log("clear step h");*/ },
                                             eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: 0))));
 
         CO jumper = new CO("jumper", pickable: true, usable:true,
                              guiEvent: new COEvent(name: "Jumper", eventAction: delegate (CO character, CO caller, CO target) 
                              {
-                                 Debug.Log("jumper guievent");
+                                 //Debug.Log("jumper guievent");
                                  game.currCh.range = new CO.CORange(jumpRange);
 
                              },
                                                   eventTrigger: new EvTrig()),
                             range: new CO.CORange(new List<Coor>() { new Coor(0,0)}),
                             type: CO.Type.Weapon);
+      
+        jumper.coEvents.Add(new COEvent(name: "DestroyJumperOnFinishTurn", eventTrigger: new EvTrig(EvTrig.Type.FinishTurn),
+                                    eventAction: delegate (CO character2, CO caller2, CO target2) { 
+                                      game.currCh.range = new CO.CORange(defaultRange);
+                                      game.DestroyCO(caller2); }));
+ 
 
         rozi.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target){
             if(game.step!=0) 
@@ -261,17 +267,18 @@ public static class GameInitialization
             if (caller.GratisStep())
                 game.maxStep++;
            
-            Debug.Log("step rozi");
+            //Debug.Log("step rozi");
         },
         eventTrigger: new EvTrig()
         ));
 
-        rozi.items.Add(jumper);
 
         COEvent roziUlta = new COEvent(name: "roziUlt",
             eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Start),
                                     roundDes: new EvTrig.Description(exact: game.round + 1)),
             eventAction: delegate (CO character, CO caller, CO target) {
+              rozi.items.Add(jumper);
+              caller.coEvents.RemoveAll(x => x.name == caller.ulta.name);
             });
         rozi.ulta = roziUlta;
         
