@@ -21,6 +21,7 @@ public static class CoreObjectEditor
             EditorGUILayout.LabelField("currentField", co.currentField!=null?co.currentField.Print():"");
             EditorGUILayout.LabelField("equipedItem", co.equipedItem != null ? co.equipedItem.name : "e");
             EditorGUILayout.LabelField("crystals",  co.crystals.ToString());
+            EditorGUILayout.LabelField("step history",  co.PrintStepHistory());
 
             EditorGUILayout.LabelField("range", co.range != null ? co.range.positions.Count.ToString() : "e");
 

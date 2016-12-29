@@ -241,8 +241,7 @@ public static class GameInitialization
         zuti.ulta = zutiUlta;
         CO rozi = new CO("Pi");
         rozi.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target) { caller.ClearStepHistory(); Debug.Log("clear step h"); },
-                                            eventTrigger: new EvTrig(roundDes: new EvTrig.Description(period: 1, pShift: 0),
-                                                                        stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: 0))));
+                                            eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: 0))));
 
         CO jumper = new CO("jumper", pickable: true, usable:true,
                              guiEvent: new COEvent(name: "Jumper", eventAction: delegate (CO character, CO caller, CO target) 
@@ -256,12 +255,12 @@ public static class GameInitialization
                             type: CO.Type.Weapon);
 
         rozi.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target){
-            character.stepHistory.Add(character.previousField==null ? new Field.Coordinates(0,0) : 
+            if(game.step!=0) 
+              character.stepHistory.Add(character.previousField==null ? new Field.Coordinates(0,0) : 
                                                                       (character.currentField.coordinates - character.previousField.coordinates));
             if (caller.GratisStep())
-            {
                 game.maxStep++;
-            }
+           
             Debug.Log("step rozi");
         },
         eventTrigger: new EvTrig()

@@ -54,6 +54,13 @@ public partial class CoreObject
         }
         return false;
     }
+    public string PrintStepHistory(){
+      string res="";
+      stepHistory.ForEach(x => res +=  x.Print()); 
+      return res;
+    }
+
+
     public CO environmentOwner;
 
     public bool BelongsTo(CO target)
