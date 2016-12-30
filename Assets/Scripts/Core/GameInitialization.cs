@@ -201,8 +201,8 @@ public static class GameInitialization
         itemPlacer.coEvents.Add(new COEvent(eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Start)),
                                                 eventAction: delegate (CO character, CO caller, CO target) {
                                                     System.Random rnd = new System.Random();
-                                                    if (rnd.NextDouble() > 0.9f) game.board.TryRandomPlace(new CO(catapult));
-                                                    if (rnd.NextDouble() > 0.9f) game.board.TryRandomPlace(new CO(laser));
+                                                    if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(catapult));
+                                                    if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(laser));
                                                     if (game.crystalsOnBoard < 3) { game.crystalsOnBoard++; game.board.TryRandomPlace(new CO(crystal)); }
                                                 }));
 
@@ -278,6 +278,7 @@ public static class GameInitialization
                                     roundDes: new EvTrig.Description(exact: game.round + 1)),
             eventAction: delegate (CO character, CO caller, CO target) {
               rozi.items.Add(jumper);
+              game.maxStep=2;
               caller.coEvents.RemoveAll(x => x.name == caller.ulta.name);
             });
         rozi.ulta = roziUlta;
@@ -292,6 +293,20 @@ public static class GameInitialization
 
 
         CO crni = new CO("Bl", canStepOnPrevious: true,pickUpOnMaxStep:false);
+
+        CO stealer = new CO("stealer", usable: true,
+                            guiEvent: new COEvent(eventAction: delegate (CO character, CO caller, CO target) 
+                            { 
+                               game.StealItem(game.currCh,target);
+                            },
+                                                    eventTrigger: new EvTrig()),
+                            range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(-1, 1), new Coor(-1, -1), new Coor(0, -1), new Coor(1, -1) }),
+                            type: CO.Type.Weapon);
+
+        stealer.coEvents.Add(new COEvent(name: "DestroyStealerOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+                                    eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
+        stealer.coEvents.Add(new COEvent(name: "DestroyStealerOnFinishTurn", eventTrigger: new EvTrig(EvTrig.Type.FinishTurn),
+                                    eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
 
         CO zeleni = new CO("G");
 

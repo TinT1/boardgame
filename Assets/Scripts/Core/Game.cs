@@ -235,4 +235,30 @@ public class Game
     {
         return turn != currCh.lastCrystalTurn && item.type == CoreObject.Type.Crystal;
     }
+
+    public void StealItem(CO to,CO from)
+    {
+       RemoveAndReturnItem(from);
+       AddItem(to);
+    }
+
+    public void RemoveAndReturnItem(CO from)
+    {
+       if(from.items.Count==0) return ;
+       CO item = from.items[from.items.Count-1];
+       from.items.RemoveAt(from.items.Count-1);
+       from.coEvents.Add(new COEvent(name: "ReturnItem", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+                                    eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
+
+// da?
+// provjeravao sam nesto...
+// ok
+    }
+    
+    public void AddItem(CO from)
+    {
+
+    }
+
+
 }
