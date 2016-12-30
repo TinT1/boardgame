@@ -29,3 +29,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+Assets/Scenes/Game.unity
+ProjectSettings/ProjectSettings.asset
+ProjectSettings/ProjectVersion.txt
+
