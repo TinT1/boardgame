@@ -53,20 +53,19 @@ public class GameGui : MonoBehaviour
                 Rect attackRect = new Rect(i * fieldW + nameRect.width, j * fieldH, (1f - ratio) * fieldW, fieldH);
 
 
-                int visibleObjsCount = 0;
-                boardField.fieldObjects.ForEach(x => visibleObjsCount += x.IsVisibleTo(game.currCh) ? 1 : 0);
+                List<CO> visibleFieldObjects = new List<CO>();
+                boardField.fieldObjects.ForEach(x =>  { if(x.IsVisibleTo(game.currCh)) visibleFieldObjects.Add(x);} );
 
-
-                for (int fieldObjectIndex = 0; boardField.fieldObjects.Count == 0 || fieldObjectIndex < boardField.fieldObjects.Count; ++fieldObjectIndex)
+                for (int fieldObjectIndex = 0; visibleFieldObjects.Count == 0 || fieldObjectIndex < visibleFieldObjects.Count; ++fieldObjectIndex)
                 {
 
-                    float div = (visibleObjsCount == 0) ? 1f : (1f / (float)visibleObjsCount);
+                    float div = (visibleFieldObjects.Count == 0) ? 1f : (1f / (float)visibleFieldObjects.Count);
                     float postotak = fieldObjectIndex * div;
 
                     nameRect = new Rect(i * fieldW, (j + postotak) * fieldH, ratio * fieldW, fieldH * div);
 
 
-                    buttonLabel = (visibleObjsCount == 0) ? "" : boardField.fieldObjects[fieldObjectIndex].name;
+                    buttonLabel = (visibleFieldObjects.Count == 0) ? "" : visibleFieldObjects[fieldObjectIndex].name;
 
                     if (game.currCh.GetState == CO.State.Move) buttonLabel += game.CanCurrentCharacterMove(board[i, j]) ? "*" : "";
                     if (game.currCh.GetState == CO.State.UseItem) buttonLabel += game.CanCurrentCharacterUseItem(boardField) ? "XY" : "";
@@ -77,12 +76,12 @@ public class GameGui : MonoBehaviour
                             game.MoveCurrentCharacter(boardField);
 
                         if (game.currCh.GetState == CO.State.UseItem && game.CanCurrentCharacterUseItem(board[i, j]) == true)
-                            if (boardField.fieldObjects.Exists(co => co.type == CoreObject.Type.Character))
+                            if (visibleFieldObjects.Exists(co => co.type == CoreObject.Type.Character))
                             {
                                 game.CurrentCharacterUseItem(boardField);
                             }
                     }
-                    if (boardField.fieldObjects.Count == 0) break;
+                    if (visibleFieldObjects.Count == 0) break;
                 }
 
 
