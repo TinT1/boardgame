@@ -201,7 +201,6 @@ public class Game
 
 
 
-
     public void PickUp(CO item) 
     {
         currCh.items.Add(item);
@@ -223,6 +222,7 @@ public class Game
     }
 
 
+
     public bool CanEquip(CO item) { return item.usable &&
                                            item.guiEvent.eventTrigger.IsTriggered(EvTrig.Type.Default,round,step,maxStep,0);     }
 
@@ -238,26 +238,33 @@ public class Game
 
     public void StealItem(CO to,CO from)
     {
-       RemoveAndReturnItem(from);
-       AddItem(to);
+       CO item = RemoveItemAndAddReturnItemEvent(from,to);
+       if (item != null) AddItem(item,to);
     }
 
-    public void RemoveAndReturnItem(CO from)
+    public CO RemoveItemAndAddReturnItemEvent(CO from,CO tempOwner)
     {
-       if(from.items.Count==0) return ;
+       if(from.items.Count==0) return null ;
        CO item = from.items[from.items.Count-1];
        from.items.RemoveAt(from.items.Count-1);
-       from.coEvents.Add(new COEvent(name: "ReturnItem", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
-                                    eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
-
-// da?
-// provjeravao sam nesto...
-// ok
+       from.coEvents.Add(new COEvent(name: "ReturnItem", 
+          eventTrigger: new EvTrig( stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start)), 
+          eventAction: delegate (CO character2, CO caller2, CO target2) { 
+              if(tempOwner!=null)tempOwner.items.Remove(item); 
+              character2.items.Add(item);
+            }));
+       return item;
     }
-    
-    public void AddItem(CO from)
+   // jos trebamo dodati event crnome da izgubi item tj to treba biti u ovom returnu 
+    public void AddItem(CO item,CO to)
     {
+//      CO itemCopy = new CO(item);
+      CO itemCopy = item;
+ 
+      itemCopy.usable=true;
+      to.items.Add(itemCopy);
 
+      
     }
 
 

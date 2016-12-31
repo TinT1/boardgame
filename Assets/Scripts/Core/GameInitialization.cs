@@ -296,17 +296,18 @@ public static class GameInitialization
 
         CO stealer = new CO("stealer", usable: true,
                             guiEvent: new COEvent(eventAction: delegate (CO character, CO caller, CO target) 
-                            { 
-                               game.StealItem(game.currCh,target);
-                            },
-                                                    eventTrigger: new EvTrig()),
+                               { 
+                                  game.StealItem(game.currCh,target);
+                               },
+                               eventTrigger: new EvTrig()),
                             range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(-1, 1), new Coor(-1, -1), new Coor(0, -1), new Coor(1, -1) }),
                             type: CO.Type.Weapon);
 
-        stealer.coEvents.Add(new COEvent(name: "DestroyStealerOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
-                                    eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
-        stealer.coEvents.Add(new COEvent(name: "DestroyStealerOnFinishTurn", eventTrigger: new EvTrig(EvTrig.Type.FinishTurn),
-                                    eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
+        /* stealer.coEvents.Add(new COEvent(name: "DestroyStealerOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem), */
+        /*                             eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); })); */
+        /* stealer.coEvents.Add(new COEvent(name: "DestroyStealerOnFinishTurn", eventTrigger: new EvTrig(EvTrig.Type.FinishTurn), */
+        /*                             eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); })); */
+        crni.items.Add(stealer);
 
         CO zeleni = new CO("G");
 
@@ -351,7 +352,7 @@ public static class GameInitialization
         crni.range = new CO.CORange(defaultRange);
         plavi.range = new CO.CORange(defaultRange);
         
-        game.characters.Add(rozi);
+        game.characters.Add(crni);
         game.characters.Add(crveni);
 
         game.characters.Add(zeleni);
