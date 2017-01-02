@@ -189,10 +189,11 @@ public partial class CoreObject
         }
 
         if(coTriggerer==null || coTriggerer == this)
-        this.coEvents.ForEach(coEvent => 
-            {
+        for(int evIndex = this.coEvents.Count-1;evIndex>=0;--evIndex)
+            { 
+                COEvent coEvent = this.coEvents[evIndex];
                 if (coEvent.eventTrigger.IsTriggered(eventType, round, step, maxStep,depth)) coEvent.eventAction(character, this, target);
-            });
+            }
 
         for (int i = this.items.Count - 1; i >= 0; --i)
             this.items[i].ExecEventAction(eventType, round, step, maxStep, character, coTriggerer,target,depth+1);
