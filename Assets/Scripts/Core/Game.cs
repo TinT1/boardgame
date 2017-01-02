@@ -58,7 +58,7 @@ public class Game
 
     private void NextPlayer()
     {
- 
+        if (characters.Count - deadCharacters.Count <= 1) { Debug.Log("End Game"); Debug.Break();}
         ++turn;
         round = turn / characters.Count;
 
@@ -108,12 +108,16 @@ public class Game
     public void FinishTurn()                            {   ExecEventAction(EvTrig.Type.FinishTurn);
                                                             NextPlayer();  }
 
+    public void GuiFinishTurn()                         {   if(step!=maxStep) DamageAndReposionToBase(currCh); 
+                                                            else FinishTurn();  }
+
+
 
     public void Damage(CoreObject target)
     {
         --target.health;
         bool finishTurn = false;
-        if (target == currCh) finishTurn = true;
+        if (target == currCh && characters.Count - deadCharacters.Count >1) finishTurn = true;
         if (target.health == 0) DestroyCO(target);
         if (finishTurn) FinishTurn();
     }
