@@ -188,6 +188,30 @@ public static class GameInitialization
                         eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
         #endregion
 
+        #region stunWeapon 
+        CO stunWeapon = new CO("stunWeapon", pickable: true,
+                 guiEvent: new COEvent(name: "StunAction", 
+                    eventAction: delegate (CO character, CO caller, CO target) { 
+                      target.coEvents.Add(new COEvent(name: "NoMoveRound", 
+                        eventAction: delegate (CO character2, CO caller2, CO target2) { game.step=game.maxStep; },
+                        eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start), depth: 2)
+                      ));
+                    },
+                    eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
+                 range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(-1, 1), new Coor(1, -1), new Coor(-1, -1) }),
+                 type: CO.Type.Weapon);
+        
+
+
+        stunWeapon.coEvents.Add(new COEvent(pickUpEvent));
+
+        stunWeapon.coEvents.Add(new COEvent(name: "DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+                        eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
+        
+        
+        #endregion
+
+
         #region crystal 
 
 
@@ -203,6 +227,7 @@ public static class GameInitialization
                                                     System.Random rnd = new System.Random();
                                                     if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(catapult));
                                                     if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(laser));
+                                                    if (rnd.NextDouble() > 0.2f) game.board.TryRandomPlace(new CO(stunWeapon));
                                                     if (game.crystalsOnBoard < 3) { game.crystalsOnBoard++; game.board.TryRandomPlace(new CO(crystal)); }
                                                 }));
 
@@ -307,8 +332,8 @@ public static class GameInitialization
         /*                             eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); })); */
         /* stealer.coEvents.Add(new COEvent(name: "DestroyStealerOnFinishTurn", eventTrigger: new EvTrig(EvTrig.Type.FinishTurn), */
         /*                             eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); })); */
-        crni.items.Add(stealer);
-
+        crni.items.Add(new CO(stealer));
+        
         CO zeleni = new CO("G");
 
         zeleni.items.Add(minePlacer);

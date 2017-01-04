@@ -108,7 +108,7 @@ public class Game
     public void FinishTurn()                            {   ExecEventAction(EvTrig.Type.FinishTurn);
                                                             NextPlayer();  }
 
-    public void GuiFinishTurn()                         {   if(step!=maxStep) DamageAndReposionToBase(currCh); 
+    public void GuiFinishTurn()                         {   if(false && step!=maxStep) DamageAndReposionToBase(currCh); 
                                                             else FinishTurn();  }
 
 
