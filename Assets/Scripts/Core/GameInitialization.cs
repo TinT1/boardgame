@@ -22,11 +22,11 @@ public static class GameInitialization
         defaultRange.positions.ForEach(coor => jumpRange.positions.Add(2 * coor));
 
         #region pickupEvent
-        COEvent pickUpEvent = new COEvent(name: "pickup",
+        COEvent pickUpEvent = new COEvent(name: "Pickup",
             eventTrigger: new EvTrig(EvTrig.Type.Pickup),
             eventAction: delegate (CO character, CO caller, CO target) {
 
-                caller.coEvents.Add(new COEvent(name: "usableOn",
+                caller.coEvents.Add(new COEvent(name: "UsableOn",
                     eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start),
                                                 roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 1)),
                     eventAction: delegate (CO character2, CO caller2, CO target2) { caller2.usable = true; }
@@ -40,11 +40,11 @@ public static class GameInitialization
         #endregion
 
         #region wallAndwallPlacer
-        CO wall = new CO("wall", block: true, type: CO.Type.Environment);
+        CO wall = new CO("Wall", block: true, type: CO.Type.Environment);
         wall.coEvents.Add(new COEvent(name: "WallSelfdestruct", eventAction: delegate (CO character, CO caller, CO target) { game.DestroyCO(caller); },
                                         eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start), depth: 2)));
 
-        CO wallPlacer = new CO("wallPlacer");
+        CO wallPlacer = new CO("WallPlacer");
         wallPlacer.coEvents.Add(new COEvent(name: "PlaceWall", eventAction: delegate (CO character, CO caller, CO target) { if (character.previousField != null) caller.AddToEnvironment(new CO(wall), character.previousField); else Debug.Log("nowall"); },
                                                 eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Range, start: 1))));
 
@@ -54,12 +54,12 @@ public static class GameInitialization
         #region minePlacer
         
         
-        CO mine = new CO("mine", type: CO.Type.Weapon, publicVisibility: false);
+        CO mine = new CO("Mine", type: CO.Type.Weapon, publicVisibility: false);
         mine.coEvents.Add(new COEvent(name: "MineDmg", eventAction: delegate (CO character, CO caller, CO target)
          {// Debug.Log(character.currentField.Print()+" "+ caller.currentField.Print()+" "+target.currentField.Print()); 
             if (caller.BelongsTo(target) == false)
              {
-                 game.DamageAndReposionToBase(target);
+                 game.DamageAndRepositionToBase(target);
                  caller.environmentOwner.SetInt("nbrOfMines", caller.environmentOwner.GetInt("nbrOfMines") + 1);
                  game.DestroyCO(caller);
 
@@ -68,19 +68,19 @@ public static class GameInitialization
 
          }, eventTrigger: new EvTrig(EvTrig.Type.StepOnField)));
 
-        CO bigMine = new CO("bigMine", type: CO.Type.Weapon, publicVisibility: false);
+        CO bigMine = new CO("BigMine", type: CO.Type.Weapon, publicVisibility: false);
         bigMine.coEvents.Add(new COEvent(name: "BigMineDmg", eventAction: delegate (CO character, CO caller, CO target)
          {// Debug.Log(character.currentField.Print()+" "+ caller.currentField.Print()+" "+target.currentField.Print()); 
             if (caller.BelongsTo(target) == false)
              {
-                 game.DamageAndReposionToBase(target);
+                 game.DamageAndRepositionToBase(target);
                  game.DestroyCO(caller);
 
              }
 
          }, eventTrigger: new EvTrig(EvTrig.Type.StepOnField)));
 
-        CO minePlacer = new CO("smallMinePlacer", usable: true,
+        CO minePlacer = new CO("SmallMinePlacer", usable: true,
                                  guiEvent: new COEvent(name: "PlaceMine", eventAction: delegate (CO character, CO caller, CO target)
                                           {
                                               if (caller.GetInt("nbrOfMines") > 0)
@@ -104,7 +104,7 @@ public static class GameInitialization
 
         minePlacer.SetInt("nbrOfMines", 3);
 
-        CO bigMinePlacer = new CO("bigMinePlacer", usable: true,
+        CO bigMinePlacer = new CO("BigMinePlacer", usable: true,
                                 guiEvent: new COEvent(name: "PlaceBigMine", eventAction: delegate (CO character, CO caller, CO target)
                                                         {
                                                             if (caller.GetInt("nbrOfBigMines") > 0)
@@ -124,8 +124,8 @@ public static class GameInitialization
         #endregion
 
         #region devour
-        CO devour = new CO("devour", usable: true,
-                            guiEvent: new COEvent(eventAction: delegate (CO character, CO caller, CO target) { game.MoveCurrChDamageAndReposionToBase(target); },
+        CO devour = new CO("Devour", usable: true,
+                            guiEvent: new COEvent(eventAction: delegate (CO character, CO caller, CO target) { game.MoveCurrChDamageAndRepositionToBase(target); },
                                                     eventTrigger: new EvTrig()),
                             range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(-1, 1), new Coor(-1, -1), new Coor(0, -1), new Coor(1, -1) }),
                             type: CO.Type.Weapon);
@@ -137,8 +137,8 @@ public static class GameInitialization
         #endregion
 
         #region catapult
-        CO catapult = new CO("catapult", pickable: true,
-                             guiEvent: new COEvent(name: "CatapultDmg", eventAction: delegate (CO character, CO caller, CO target) { game.DamageAndReposionToBase(target); },
+        CO catapult = new CO("Catapult", pickable: true,
+                             guiEvent: new COEvent(name: "CatapultDmg", eventAction: delegate (CO character, CO caller, CO target) { game.DamageAndRepositionToBase(target); },
                                                   eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
                             range: new CO.CORange(new List<Coor>() { new Coor(2, 2), new Coor(-2, 2), new Coor(2, 0), new Coor(0, 2), new Coor(-2, 0), new Coor(0, -2), new Coor(2, -2), new Coor(-2, -2) }),
                             type: CO.Type.Weapon);
@@ -151,7 +151,7 @@ public static class GameInitialization
 
         #endregion
         #region shotgun
-        CO shotgun = new CO("shotgun", pickable: true,
+        CO shotgun = new CO("Shotgun", pickable: true,
                             guiEvent: new COEvent(name: "ShotgunDmg", eventAction: delegate (CO character, CO caller, CO target) {
                                 Coor newCoor = target.currentField.coordinates + (target.currentField.coordinates - character.currentField.coordinates);
                                 game.DamageAndRepositionToField(target, game.board[newCoor.i, newCoor.j]);
@@ -164,7 +164,7 @@ public static class GameInitialization
                                             eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
         #endregion
         #region bowAndArrow
-        CO bowAndArrow = new CO("bowandarrow",
+        CO bowAndArrow = new CO("Bowandarrow",
                             /* endAction: delegate (CO character, CO caller, CO target)
                                   {
                                       Coor f = target.currentField;
@@ -176,8 +176,8 @@ public static class GameInitialization
 
 
         #region laser
-        CO laser = new CO("laser", pickable: true,
-                 guiEvent: new COEvent(name: "LaserDmg", eventAction: delegate (CO character, CO caller, CO target) { game.DamageAndReposionToBase(target); },
+        CO laser = new CO("Laser", pickable: true,
+                 guiEvent: new COEvent(name: "LaserDmg", eventAction: delegate (CO character, CO caller, CO target) { game.DamageAndRepositionToBase(target); },
                           eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
                 range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(-1, 1), new Coor(1, -1), new Coor(-1, -1) }),
                 type: CO.Type.Weapon);
@@ -189,7 +189,7 @@ public static class GameInitialization
         #endregion
 
         #region stunWeapon 
-        CO stunWeapon = new CO("stunWeapon", pickable: true,
+        CO stunWeapon = new CO("StunWeapon", pickable: true,
                  guiEvent: new COEvent(name: "StunAction", 
                     eventAction: delegate (CO character, CO caller, CO target) { 
                       target.coEvents.Add(new COEvent(name: "NoMoveRound", 
@@ -198,7 +198,7 @@ public static class GameInitialization
                       ));
                     },
                     eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
-                 range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(-1, 1), new Coor(1, -1), new Coor(-1, -1) }),
+                 range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(-1, 1), new Coor(-1, -1), new Coor(0, -1), new Coor(1, -1) }),
                  type: CO.Type.Weapon);
         
 
@@ -212,11 +212,33 @@ public static class GameInitialization
         #endregion
 
 
+        #region knife 
+        CO knife = new CO("Knife", pickable: true,
+                 guiEvent: new COEvent(name: "KnifeAction", 
+                    eventAction: delegate (CO character, CO caller, CO target) { 
+                       if(character.currentField== target.previousField) game.MoveCurrChDamageAndRepositionToBase(target);
+                    },
+                    eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Penultimate))),
+                 range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(-1, 1), new Coor(-1, -1), new Coor(0, -1), new Coor(1, -1) }),
+                 type: CO.Type.Weapon);
+        
+
+
+        knife.coEvents.Add(new COEvent(pickUpEvent));
+
+        knife.coEvents.Add(new COEvent(name: "DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+                        eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
+        
+        
+        #endregion
+
+
+
         #region crystal 
 
 
 
-        CO crystal = new CO("crystal", type: CO.Type.Crystal);
+        CO crystal = new CO("Crystal", type: CO.Type.Crystal);
 
         #endregion
 
@@ -227,7 +249,8 @@ public static class GameInitialization
                                                     System.Random rnd = new System.Random();
                                                     if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(catapult));
                                                     if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(laser));
-                                                    if (rnd.NextDouble() > 0.2f) game.board.TryRandomPlace(new CO(stunWeapon));
+                                                    if (rnd.NextDouble() > 0.2f)  game.board.TryRandomPlace(new CO(stunWeapon));
+                                                    if (rnd.NextDouble() > 0.2f)  game.board.TryRandomPlace(new CO(knife));
                                                     if (game.crystalsOnBoard < 3) { game.crystalsOnBoard++; game.board.TryRandomPlace(new CO(crystal)); }
                                                 }));
 

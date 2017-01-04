@@ -108,7 +108,7 @@ public class Game
     public void FinishTurn()                            {   ExecEventAction(EvTrig.Type.FinishTurn);
                                                             NextPlayer();  }
 
-    public void GuiFinishTurn()                         {   if(false && step!=maxStep) DamageAndReposionToBase(currCh); 
+    public void GuiFinishTurn()                         {   if(false && step!=maxStep) DamageAndRepositionToBase(currCh); 
                                                             else FinishTurn();  }
 
 
@@ -122,7 +122,7 @@ public class Game
         if (finishTurn) FinishTurn();
     }
 
-    public void DamageAndReposionToBase(CoreObject target)
+    public void DamageAndRepositionToBase(CoreObject target)
     {
         Board.Move(target, target.baseField);
         Damage(target);
@@ -133,7 +133,7 @@ public class Game
         foreach (CO CObject in f.fieldObjects)
         {
             if (CObject.name == "wall") f = target.currentField;
-            if (CObject.type == CO.Type.Character) this.DamageAndReposionToBase(CObject);
+            if (CObject.type == CO.Type.Character) this.DamageAndRepositionToBase(CObject);
             break;
         }
         Board.Move(target, f);
@@ -141,7 +141,7 @@ public class Game
         Damage(target);
     }
 
-    public void MoveCurrChDamageAndReposionToBase(CoreObject target)
+    public void MoveCurrChDamageAndRepositionToBase(CoreObject target)
     {
         Field f = target.currentField;
         Board.Move(target, target.baseField);
