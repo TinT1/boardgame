@@ -87,6 +87,7 @@ public static class GameInitialization
                                               {
                                                   CO newMine = new CO(mine);
                                                   newMine.coEvents.Add(new COEvent(
+                                                     name:"RemoveMines",
                                                      eventTrigger: new EvTrig(type: EvTrig.Type.FinishTurn, roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 3), depth: 2),
                                                      eventAction: delegate (CO character2, CO caller2, CO target2)
                                                          {
@@ -125,7 +126,8 @@ public static class GameInitialization
 
         #region devour
         CO devour = new CO("Devour", usable: true,
-                            guiEvent: new COEvent(eventAction: delegate (CO character, CO caller, CO target) { game.MoveCurrChDamageAndRepositionToBase(target); },
+                            guiEvent: new COEvent(  name:"Devour",
+                                                    eventAction: delegate (CO character, CO caller, CO target) { game.MoveCurrChDamageAndRepositionToBase(target); },
                                                     eventTrigger: new EvTrig()),
                             range: new CO.CORange(new List<Coor>() { new Coor(1, 1), new Coor(1, 0), new Coor(0, 1), new Coor(-1, 0), new Coor(-1, 1), new Coor(-1, -1), new Coor(0, -1), new Coor(1, -1) }),
                             type: CO.Type.Weapon);
@@ -193,7 +195,7 @@ public static class GameInitialization
                  guiEvent: new COEvent(name: "StunAction", 
                     eventAction: delegate (CO character, CO caller, CO target) { 
                       target.coEvents.Add(new COEvent(name: "NoMoveRound", 
-                        eventAction: delegate (CO character2, CO caller2, CO target2) { game.step=game.maxStep; },
+                        eventAction: delegate (CO character2, CO caller2, CO target2) { game.step=game.maxStep; caller2.coEvents.RemoveAll(e => e.name== "NoMoveRound"); },
                         eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start), depth: 2)
                       ));
                     },
@@ -244,7 +246,8 @@ public static class GameInitialization
 
         #region itemPlacer
         CO itemPlacer = new CO("ItemPlacer");
-        itemPlacer.coEvents.Add(new COEvent(eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Start)),
+        itemPlacer.coEvents.Add(new COEvent(    name:"ItemPlacerEv",
+                                                eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Start)),
                                                 eventAction: delegate (CO character, CO caller, CO target) {
                                                     System.Random rnd = new System.Random();
                                                     if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(catapult));
@@ -288,7 +291,8 @@ public static class GameInitialization
 
         zuti.ulta = zutiUlta;
         CO rozi = new CO("Pi");
-        rozi.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target) { caller.ClearStepHistory(); /*Debug.Log("clear step h");*/ },
+        rozi.coEvents.Add(new COEvent(      name:"ClearStepHistory", 
+                                            eventAction: delegate (CO character, CO caller, CO target) { caller.ClearStepHistory(); /*Debug.Log("clear step h");*/ },
                                             eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: 0))));
 
         CO jumper = new CO("jumper", pickable: true, usable:true,
@@ -308,7 +312,7 @@ public static class GameInitialization
                                       game.DestroyCO(caller2); }));
  
 
-        rozi.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target){
+        rozi.coEvents.Add(new COEvent(name:"AddExtraStep",eventAction: delegate (CO character, CO caller, CO target){
             if(game.step!=0) 
               character.stepHistory.Add(character.previousField==null ? new Field.Coordinates(0,0) : 
                                                                       (character.currentField.coordinates - character.previousField.coordinates));
@@ -335,7 +339,8 @@ public static class GameInitialization
 
     
         CO crveni = new CO("R");
-        crveni.coEvents.Add(new COEvent(eventAction: delegate (CO character, CO caller, CO target) { caller.items.Add(devour); },
+        crveni.coEvents.Add(new COEvent(    name: "AddDevour",
+                                            eventAction: delegate (CO character, CO caller, CO target) { caller.items.Add(devour); },
                                             eventTrigger: new EvTrig(roundDes: new EvTrig.Description(period: 3, pShift: 2),
                                                                         stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: 0))));
 
@@ -343,7 +348,7 @@ public static class GameInitialization
         CO crni = new CO("Bl", canStepOnPrevious: true,pickUpOnMaxStep:false);
 
         CO stealer = new CO("stealer", usable: true,
-                            guiEvent: new COEvent(eventAction: delegate (CO character, CO caller, CO target) 
+                            guiEvent: new COEvent(name:"StealerGUIEv",eventAction: delegate (CO character, CO caller, CO target) 
                                { 
                                   game.StealItem(game.currCh,target);
                                },
@@ -369,6 +374,7 @@ public static class GameInitialization
                 CO ultaMine = new CO(bigMine);
 
                 ultaMine.coEvents.Add(new COEvent(
+                   name: "UltaMineEv",
                    eventTrigger: new EvTrig(type: EvTrig.Type.FinishTurn, roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 1), depth: 2),
                    eventAction: delegate (CO character2, CO caller2, CO target2)
                         {

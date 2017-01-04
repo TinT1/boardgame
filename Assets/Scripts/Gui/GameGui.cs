@@ -22,6 +22,7 @@ public class GameGui : MonoBehaviour
 
     public static void SetSkins()
     {
+        skins["Default"] = Resources.Load("Skins/DefaultGuiSkin") as GUISkin;
         skins["FinishTurnPassive"] = Resources.Load("Skins/FinishTurnPassive") as GUISkin;
     }
 
@@ -31,7 +32,7 @@ public class GameGui : MonoBehaviour
 
     void OnGUI()
     {
-        GUISkin defaultSkin = GUI.skin;
+        GUISkin defaultSkin = skins["Default"];
 
         if (board == null) board = game.board;
 
