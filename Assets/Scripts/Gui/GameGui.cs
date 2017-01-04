@@ -22,6 +22,7 @@ public class GameGui : MonoBehaviour
 
     public static void SetSkins()
     {
+        skins["Background"] = Resources.Load("Skins/Background") as GUISkin;
         skins["Default"] = Resources.Load("Skins/DefaultGuiSkin") as GUISkin;
         skins["FinishTurnPassive"] = Resources.Load("Skins/FinishTurnPassive") as GUISkin;
     }
@@ -31,10 +32,17 @@ public class GameGui : MonoBehaviour
 
 
     void OnGUI()
-    {
+   {
         GUISkin defaultSkin = skins["Default"];
 
+        GUI.skin = skins["Background"];
+        GUI.Box(new Rect(0f,0f,Screen.width,Screen.height),"");
+        GUI.skin = defaultSkin;
         if (board == null) board = game.board;
+
+        float contentWidth = (Board.n   ) * fieldW ;
+        
+        GUILayout.BeginArea(new Rect(Screen.width* 0.5f-  0.5f* contentWidth,0f,8f*Screen.width,Screen.height));
 
         #region fields
         for (int i = 0; i < Board.n; ++i)
@@ -134,5 +142,7 @@ public class GameGui : MonoBehaviour
         GUI.Box(new Rect((Board.n - 3) * fieldW, (Board.n) * fieldH, fieldW, fieldH), "round:" + game.round);
         GUI.Box(new Rect((Board.n - 4) * fieldW, (Board.n) * fieldH, fieldW, fieldH), "turn:" + game.turn);
 
+
+        GUILayout.EndArea();
     }
 }
