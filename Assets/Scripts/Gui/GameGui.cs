@@ -41,8 +41,8 @@ public class GameGui : MonoBehaviour
         if (board == null) board = game.board;
 
         float contentWidth = (Board.n   ) * fieldW ;
-        
-        GUILayout.BeginArea(new Rect(Screen.width* 0.5f-  0.5f* contentWidth,0f,8f*Screen.width,Screen.height));
+        float contentX = 0;// Screen.width* 0.5f-  0.5f* contentWidth;
+        GUILayout.BeginArea(new Rect(contentX,0f,8f*Screen.width,Screen.height));
 
         #region fields
         for (int i = 0; i < Board.n; ++i)
@@ -52,7 +52,8 @@ public class GameGui : MonoBehaviour
                 Field boardField = board[i, j];
 
                 if (boardField.Show() == false) continue;
-                GUI.skin = boardField.Skin();
+
+                GUI.skin = game.Skin(boardField);
 
 
                 string buttonLabel = "";
@@ -99,7 +100,7 @@ public class GameGui : MonoBehaviour
 
             }
         #endregion
-
+ 
         GUI.skin = defaultSkin;
         int row = 0;
 

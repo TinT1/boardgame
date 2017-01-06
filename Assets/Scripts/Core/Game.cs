@@ -12,7 +12,8 @@ using EvTrig = COEventTrigger ;
 
 // dodati buildera, 
 public class Game
-{
+{ 
+    public GUISkin      characterSkin;
     public List<CO>     characters      = new List<CO>();
     List<CO>            deadCharacters  = new List<CO>();
 
@@ -30,13 +31,20 @@ public class Game
     public int dice;
 
 
-	public Game ()
+	  public Game ()
     {
+        SetSkins(); 
+
         GameInitialization.Initialize(this);
                 
         StartGame();
     }
-
+    
+    public void SetSkins()
+    {
+        characterSkin = Resources.Load("Skins/CharacterSkin") as GUISkin; 
+    }
+    
     public void StartGame()
     {
         //init
@@ -251,13 +259,20 @@ public class Game
        if(from.items.Count==0) return null ;
        CO item = from.items[from.items.Count-1];
        from.items.RemoveAt(from.items.Count-1);
-       from.coEvents.Add(new COEvent(name: "ReturnItem", 
+       COEvent returnItemEvent = new COEvent(name: "ReturnItem", 
           eventTrigger: new EvTrig( stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start)), 
-          eventAction: delegate (CO character2, CO caller2, CO target2) { 
-              if(tempOwner!=null)tempOwner.items.Remove(item); 
-              character2.items.Add(item);
-            }));
-       return item;
+          eventAction: delegate (CO character2, CO caller2, CO target2) { }
+          );
+       returnItemEvent.eventAction = delegate (CO character2, CO caller2, CO target2) { 
+              if(tempOwner!=null && tempOwner.items.Contains(item))
+              {  tempOwner.items.Remove(item); 
+                 character2.items.Add(item);
+                 character2.coEvents.Remove(returnItemEvent); 
+              }
+          };
+
+      from.coEvents.Add(returnItemEvent);
+      return item;
     }
    // jos trebamo dodati event crnome da izgubi item tj to treba biti u ovom returnu 
     public void AddItem(CO item,CO to)
@@ -271,5 +286,11 @@ public class Game
       
     }
 
+   public GUISkin Skin(Field field)
+   {
+     
+     if ( currCh.currentField == field) return characterSkin; 
+     return field.Skin(); 
+   }
 
 }
