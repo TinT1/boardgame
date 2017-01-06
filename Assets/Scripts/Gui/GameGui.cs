@@ -34,7 +34,6 @@ public class GameGui : MonoBehaviour
     void OnGUI()
    {
         GUISkin defaultSkin = skins["Default"];
-
         GUI.skin = skins["Background"];
         GUI.Box(new Rect(0f,0f,Screen.width,Screen.height),"");
         GUI.skin = defaultSkin;
@@ -53,12 +52,12 @@ public class GameGui : MonoBehaviour
 
                 if (boardField.Show() == false) continue;
 
-                GUI.skin = game.Skin(boardField);
+                //GUI.skin = game.Skin(boardFieldra);
 
 
                 string buttonLabel = "";
 
-                GUI.Box(new Rect(i * fieldW, j * fieldH, fieldW, fieldH), "");
+                GUI.Box(new Rect(i * fieldW, j * fieldH, fieldW, fieldH), "",game.Skin(boardField).box);
                 Rect nameRect = new Rect(i * fieldW, j * fieldH, ratio * fieldW, fieldH);
                 Rect attackRect = new Rect(i * fieldW + nameRect.width, j * fieldH, (1f - ratio) * fieldW, fieldH);
 
@@ -80,7 +79,7 @@ public class GameGui : MonoBehaviour
                     if (game.currCh.GetState == CO.State.Move) buttonLabel += game.CanCurrentCharacterMove(board[i, j]) ? "*" : "";
                     if (game.currCh.GetState == CO.State.UseItem) buttonLabel += game.CanCurrentCharacterUseItem(boardField) ? "XY" : "";
 
-                    if (GUI.Button(nameRect, buttonLabel))
+                    if (GUI.Button(nameRect, buttonLabel, game.Skin(boardField).button))
                     {
                         if (game.currCh.GetState == CO.State.Move && game.CanCurrentCharacterMove(boardField) == true)
                             game.MoveCurrentCharacter(boardField);

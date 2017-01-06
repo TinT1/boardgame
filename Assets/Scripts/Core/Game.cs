@@ -14,6 +14,7 @@ using EvTrig = COEventTrigger ;
 public class Game
 { 
     public GUISkin      characterSkin;
+    public GUISkin knifeSkin, shotgunSkin;
     public List<CO>     characters      = new List<CO>();
     List<CO>            deadCharacters  = new List<CO>();
 
@@ -42,7 +43,9 @@ public class Game
     
     public void SetSkins()
     {
-        characterSkin = Resources.Load("Skins/CharacterSkin") as GUISkin; 
+        characterSkin = Resources.Load("Skins/CharacterSkin") as GUISkin;
+        knifeSkin = Resources.Load("Skins/KnifeSkin") as GUISkin;
+        shotgunSkin = Resources.Load("Skins/ShotgunSkin") as GUISkin;
     }
     
     public void StartGame()
@@ -288,8 +291,9 @@ public class Game
 
    public GUISkin Skin(Field field)
    {
-     
-     if ( currCh.currentField == field) return characterSkin; 
+     if ( currCh.currentField == field)     return characterSkin;
+     if ( field.fieldObjects.Exists(x => x.name=="Knife"))  return knifeSkin;
+     if (field.fieldObjects.Exists(x => x.name == "Shotgun")) return shotgunSkin;
      return field.Skin(); 
    }
 

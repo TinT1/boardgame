@@ -421,7 +421,7 @@ public static class GameInitialization
         plavi.range = new CO.CORange(defaultRange);
         
         game.characters.Add(crni);
-        game.characters.Add(crveni);
+        game.characters.Add(rozi);
 
         game.characters.Add(zeleni);
         game.characters.Add(zuti);
