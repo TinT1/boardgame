@@ -11,6 +11,8 @@ public class GameGui : MonoBehaviour
 
     public static bool inputFinished;
 
+    public static Dictionary<string,GUIStyle> customStyles;
+    
     public float fieldW = 70f, fieldH = 50f;
     float ratio = 0.9f;
 
@@ -78,7 +80,8 @@ public class GameGui : MonoBehaviour
 
 
                     buttonLabel = (visibleFieldObjects.Count == 0) ? "" : visibleFieldObjects[fieldObjectIndex].name;
-                    GUIStyle buttonStyle = (visibleFieldObjects.Count == 0) ? defaultSkin.button : skins["CO"].GetStyle(visibleFieldObjects[fieldObjectIndex].name);
+
+                    GUIStyle buttonStyle = (visibleFieldObjects.Count == 0) ? defaultSkin.button : customStyles[visibleFieldObjects[fieldObjectIndex].name];
 
                     if (game.currCh.GetState == CO.State.Move) buttonLabel += game.CanCurrentCharacterMove(board[i, j]) ? "*" : "";
                     if (game.currCh.GetState == CO.State.UseItem) buttonLabel += game.CanCurrentCharacterUseItem(boardField) ? "XY" : "";

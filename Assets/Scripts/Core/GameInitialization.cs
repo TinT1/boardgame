@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEditor;
 
 using CO = CoreObject;
 using Coor = Field.Coordinates;
@@ -429,15 +430,29 @@ public static class GameInitialization
         Board.Place(new CO(shotgun), game.board[5, 5]);
 
 //        CoreObject.created.ForEach(c =>Debug.Log(c.name));
-        GUISkin coSkin   = Resources.Load("Skins/CO") as GUISkin;
         var textures = Resources.LoadAll("Textures/CO",typeof(Texture));
         
-        coSkin.customStyles = new GUIStyle[textures.Length];
-        for(int i=0; i < coSkin.customStyles.Length; ++i) {
-          coSkin.customStyles[i] = new GUIStyle();
-          coSkin.customStyles[i].name = textures[i].name;
-          coSkin.customStyles[i].normal.background = textures[i] as Texture2D;
+        GameGui.customStyles = new Dictionary<String,GUIStyle>();
+        for(int i=0; i < textures.Length; ++i) {
+          GUIStyle guiStyle = new GUIStyle();
+          guiStyle.name = textures[i].name;
+          guiStyle.normal.background = textures[i] as Texture2D;
+          guiStyle.stretchWidth=false;
+          GameGui.customStyles.Add(guiStyle.name,guiStyle);
+
         }
+
+        GUISkin savedCustomStylesSkin = Resources.Load("Skins/CO") as GUISkin;
+        savedCustomStylesSkin.customStyles = new GUIStyle[textures.Length];
+        int k=0; 
+        foreach(GUIStyle style in GameGui.customStyles.Values) {
+          savedCustomStylesSkin.customStyles[k] = style;
+          ++k;
+        }
+        /* SerializedObject.ApplyModifiedProperties(coSkin); */
+        /* SerializedProperty.Update(); */
+
     }
 
 }
+
