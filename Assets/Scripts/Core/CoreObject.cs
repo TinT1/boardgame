@@ -9,6 +9,7 @@ public delegate void COAction(CoreObject character = null, CoreObject caller = n
 
 public partial class CoreObject
 {
+    public static List<CoreObject> created = new List<CoreObject>();
     public Field currentField;
     public Field previousField;
     public Field baseField;
@@ -138,6 +139,9 @@ public partial class CoreObject
         this.canStepOnPrevious = canStepOnPrevious;
         if (range == null) this.range = new CORange(); else this.range = range;
         this.type = type;
+       
+        CoreObject.created.Add(this);
+        
     }
 
     public CoreObject(CO co)

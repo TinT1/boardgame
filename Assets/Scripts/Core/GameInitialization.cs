@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,8 +55,8 @@ public static class GameInitialization
         #region minePlacer
         
         
-        CO mine = new CO("Mine", type: CO.Type.Weapon, publicVisibility: false);
-        mine.coEvents.Add(new COEvent(name: "MineDmg", eventAction: delegate (CO character, CO caller, CO target)
+        CO smallMine = new CO("SmallMine", type: CO.Type.Weapon, publicVisibility: false);
+        smallMine.coEvents.Add(new COEvent(name: "MineDmg", eventAction: delegate (CO character, CO caller, CO target)
          {// Debug.Log(character.currentField.Print()+" "+ caller.currentField.Print()+" "+target.currentField.Print()); 
             if (caller.BelongsTo(target) == false)
              {
@@ -85,7 +86,7 @@ public static class GameInitialization
                                           {
                                               if (caller.GetInt("nbrOfMines") > 0)
                                               {
-                                                  CO newMine = new CO(mine);
+                                                  CO newMine = new CO(smallMine);
                                                   newMine.coEvents.Add(new COEvent(
                                                      name:"RemoveMines",
                                                      eventTrigger: new EvTrig(type: EvTrig.Type.FinishTurn, roundDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: game.round + 3), depth: 2),
@@ -190,8 +191,8 @@ public static class GameInitialization
                         eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
         #endregion
 
-        #region stunWeapon 
-        CO stunWeapon = new CO("StunWeapon", pickable: true,
+        #region Baseball 
+        CO baseball = new CO("Baseball", pickable: true,
                  guiEvent: new COEvent(name: "StunAction", 
                     eventAction: delegate (CO character, CO caller, CO target) { 
                       target.coEvents.Add(new COEvent(name: "NoMoveRound", 
@@ -205,9 +206,9 @@ public static class GameInitialization
         
 
 
-        stunWeapon.coEvents.Add(new COEvent(pickUpEvent));
+        baseball.coEvents.Add(new COEvent(pickUpEvent));
 
-        stunWeapon.coEvents.Add(new COEvent(name: "DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
+        baseball.coEvents.Add(new COEvent(name: "DestroyItemOnUse", eventTrigger: new EvTrig(EvTrig.Type.UseItem),
                         eventAction: delegate (CO character2, CO caller2, CO target2) { game.DestroyCO(caller2); }));
         
         
@@ -252,7 +253,7 @@ public static class GameInitialization
                                                     System.Random rnd = new System.Random();
                                                     if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(catapult));
                                                     if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(laser));
-                                                    if (rnd.NextDouble() > 0.9f)  game.board.TryRandomPlace(new CO(stunWeapon));
+                                                    if (rnd.NextDouble() > 0.9f)  game.board.TryRandomPlace(new CO(baseball));
                                                     if (rnd.NextDouble() > 0.9f)  game.board.TryRandomPlace(new CO(knife));
                                                     if (game.crystalsOnBoard < 5) { game.crystalsOnBoard++; game.board.TryRandomPlace(new CO(crystal)); }
                                                 }));
@@ -265,7 +266,7 @@ public static class GameInitialization
 
 
         #region Characters
-        CO zuti = new CO("Y");
+        CO zuti = new CO("Yellow");
         zuti.items.Add(wallPlacer);
 
         COEvent zutiUlta = new COEvent(name: "YellowUlt",
@@ -290,12 +291,12 @@ public static class GameInitialization
             });
 
         zuti.ulta = zutiUlta;
-        CO rozi = new CO("Pi");
+        CO rozi = new CO("Pink");
         rozi.coEvents.Add(new COEvent(      name:"ClearStepHistory", 
                                             eventAction: delegate (CO character, CO caller, CO target) { caller.ClearStepHistory(); /*Debug.Log("clear step h");*/ },
                                             eventTrigger: new EvTrig(stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: 0))));
 
-        CO jumper = new CO("jumper", pickable: true, usable:true,
+        CO jumper = new CO("Jumper", pickable: true, usable:true,
                              guiEvent: new COEvent(name: "Jumper", eventAction: delegate (CO character, CO caller, CO target) 
                              {
                                  //Debug.Log("jumper guievent");
@@ -335,17 +336,17 @@ public static class GameInitialization
             });
         rozi.ulta = roziUlta;
         
-        CO plavi = new CO("B", new int[] { 1, 1, 2, 3, 4, 6 }, blockFree: new List<CO.Type>() { CO.Type.Environment });
+        CO plavi = new CO("Blue", new int[] { 1, 1, 2, 3, 4, 6 }, blockFree: new List<CO.Type>() { CO.Type.Environment });
 
     
-        CO crveni = new CO("R");
+        CO crveni = new CO("Red");
         crveni.coEvents.Add(new COEvent(    name: "AddDevour",
                                             eventAction: delegate (CO character, CO caller, CO target) { caller.items.Add(devour); },
                                             eventTrigger: new EvTrig(roundDes: new EvTrig.Description(period: 3, pShift: 2),
                                                                         stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Exact, exact: 0))));
 
 
-        CO crni = new CO("Bl", canStepOnPrevious: true,pickUpOnMaxStep:false);
+        CO crni = new CO("Black", canStepOnPrevious: true,pickUpOnMaxStep:false);
 
         CO stealer = new CO("stealer", usable: true,
                             guiEvent: new COEvent(name:"StealerGUIEv",eventAction: delegate (CO character, CO caller, CO target) 
@@ -376,7 +377,7 @@ public static class GameInitialization
 
 
 
-        CO zeleni = new CO("G");
+        CO zeleni = new CO("Green");
 
         zeleni.items.Add(minePlacer);
         zeleni.items.Add(bigMinePlacer);
@@ -426,6 +427,17 @@ public static class GameInitialization
         game.characters.Add(zeleni);
         game.characters.Add(zuti);
         Board.Place(new CO(shotgun), game.board[5, 5]);
+
+//        CoreObject.created.ForEach(c =>Debug.Log(c.name));
+        GUISkin coSkin   = Resources.Load("Skins/CO") as GUISkin;
+        var textures = Resources.LoadAll("Textures/CO",typeof(Texture));
+        
+        coSkin.customStyles = new GUIStyle[textures.Length];
+        for(int i=0; i < coSkin.customStyles.Length; ++i) {
+          coSkin.customStyles[i] = new GUIStyle();
+          coSkin.customStyles[i].name = textures[i].name;
+          coSkin.customStyles[i].normal.background = textures[i] as Texture2D;
+        }
     }
 
 }

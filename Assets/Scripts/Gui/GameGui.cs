@@ -23,6 +23,7 @@ public class GameGui : MonoBehaviour
     public static void SetSkins()
     {
         skins["Background"] = Resources.Load("Skins/Background") as GUISkin;
+        skins["CO"] = Resources.Load("Skins/CO") as GUISkin;
         skins["Default"] = Resources.Load("Skins/DefaultGuiSkin") as GUISkin;
         skins["FinishTurnPassive"] = Resources.Load("Skins/FinishTurnPassive") as GUISkin;
     }
@@ -43,6 +44,8 @@ public class GameGui : MonoBehaviour
         float contentX = 0;// Screen.width* 0.5f-  0.5f* contentWidth;
         GUILayout.BeginArea(new Rect(contentX,0f,8f*Screen.width,Screen.height));
 
+        GUI.skin = skins["CO"];
+        
         #region fields
         for (int i = 0; i < Board.n; ++i)
             for (int j = 0; j < Board.n; ++j)
@@ -57,7 +60,7 @@ public class GameGui : MonoBehaviour
 
                 string buttonLabel = "";
 
-                GUI.Box(new Rect(i * fieldW, j * fieldH, fieldW, fieldH), "",game.Skin(boardField).box);
+//                GUI.Box(new Rect(i * fieldW, j * fieldH, fieldW, fieldH), "",game.Skin(boardField).box);
                 Rect nameRect = new Rect(i * fieldW, j * fieldH, ratio * fieldW, fieldH);
                 Rect attackRect = new Rect(i * fieldW + nameRect.width, j * fieldH, (1f - ratio) * fieldW, fieldH);
 
@@ -75,11 +78,12 @@ public class GameGui : MonoBehaviour
 
 
                     buttonLabel = (visibleFieldObjects.Count == 0) ? "" : visibleFieldObjects[fieldObjectIndex].name;
+                    string buttonStyle = (visibleFieldObjects.Count == 0) ? "" : visibleFieldObjects[fieldObjectIndex].name;
 
                     if (game.currCh.GetState == CO.State.Move) buttonLabel += game.CanCurrentCharacterMove(board[i, j]) ? "*" : "";
                     if (game.currCh.GetState == CO.State.UseItem) buttonLabel += game.CanCurrentCharacterUseItem(boardField) ? "XY" : "";
 
-                    if (GUI.Button(nameRect, buttonLabel, game.Skin(boardField).button))
+                    if (GUI.Button(nameRect, buttonLabel,buttonStyle ))
                     {
                         if (game.currCh.GetState == CO.State.Move && game.CanCurrentCharacterMove(boardField) == true)
                             game.MoveCurrentCharacter(boardField);
