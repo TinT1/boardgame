@@ -78,12 +78,12 @@ public class GameGui : MonoBehaviour
 
 
                     buttonLabel = (visibleFieldObjects.Count == 0) ? "" : visibleFieldObjects[fieldObjectIndex].name;
-                    string buttonStyle = (visibleFieldObjects.Count == 0) ? "" : visibleFieldObjects[fieldObjectIndex].name;
+                    GUIStyle buttonStyle = (visibleFieldObjects.Count == 0) ? defaultSkin.button : skins["CO"].GetStyle(visibleFieldObjects[fieldObjectIndex].name);
 
                     if (game.currCh.GetState == CO.State.Move) buttonLabel += game.CanCurrentCharacterMove(board[i, j]) ? "*" : "";
                     if (game.currCh.GetState == CO.State.UseItem) buttonLabel += game.CanCurrentCharacterUseItem(boardField) ? "XY" : "";
 
-                    if (GUI.Button(nameRect, buttonLabel,buttonStyle ))
+                    if (GUI.Button(nameRect, buttonLabel,buttonStyle))
                     {
                         if (game.currCh.GetState == CO.State.Move && game.CanCurrentCharacterMove(boardField) == true)
                             game.MoveCurrentCharacter(boardField);
