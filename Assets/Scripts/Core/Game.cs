@@ -118,8 +118,9 @@ public class Game
     public void GuiFinishTurn()                         {   if(step!=maxStep) DamageAndRepositionToBase(currCh);
                                                             else FinishTurn();  }
     public CoreObject retCharachterOnField(Field field){
-        foreach(CoreObject co in field.fieldObjects)    {   if(co.type == CoreObject.Type.Character) return co;
-        return null;
+        foreach(CoreObject co in field.fieldObjects)
+            if(co.type == CoreObject.Type.Character) return co;
+                return null;
     }
 
     public void Damage(CoreObject target)
