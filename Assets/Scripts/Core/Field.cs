@@ -5,8 +5,6 @@ using System.Collections.Generic;
 public partial class Field
 {
     public enum Type { Black,White,Null}
-
-
     public Coordinates coordinates;
     public Type type;
     public List<CoreObject> fieldObjects = new List<CoreObject>();
@@ -29,13 +27,13 @@ public partial class Field
     public static int CoordinateDistance(Field field1, Field field2)	{	return Coordinates.Distance(field1.coordinates, field2.coordinates);	}
     public static bool SameCoordinates(Field field1, Field field2)		{	return Coordinates.IsEqual(field1.coordinates, field2.coordinates);		}
 
-    
+
     public string Print()												{	return coordinates.Print();												}
 
 
     public GUISkin Skin()												{	return skins[type];														}
     public bool Show() 													{ 	return type != Type.Null; 												}
-	
+
     public static void SetSkin()
     {
         skins[Type.Black] = Resources.Load("Skins/Field/Black") as GUISkin;
@@ -54,13 +52,13 @@ public partial class Field
 
 	    public Coordinates(int i,int j)											{	this.i = i;			this.j = j;										}
         public Coordinates(Coordinates coor)									{	this.i = coor.i;	this.j = coor.j;								}
-	
+
 		public static bool IsEqual(Coordinates cor1, Coordinates cor2)			{	return  cor1.i == cor2.i && cor2.j == cor1.j;						}
         public static Coordinates operator +(Coordinates c1, Coordinates c2)	{	return new Coordinates(c1.i + c2.i, c1.j + c2.j);					}
         public static Coordinates operator -(Coordinates c1, Coordinates c2)	{	return new Coordinates(c1.i - c2.i, c1.j - c2.j);					}
         public static Coordinates operator *(int a, Coordinates c2)           	{	return new Coordinates(a* c2.i, a* c2.j);		         			}
         public static int Distance(Coordinates c1, Coordinates c2)				{	return Mathf.Max(Mathf.Abs(c1.i - c2.i), Mathf.Abs(c1.j - c2.j));	}
-	
+
         public string Print()													{	return "(" + i + "," + j+")";											}
     }
 }

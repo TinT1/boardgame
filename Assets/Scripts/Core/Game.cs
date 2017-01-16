@@ -10,9 +10,9 @@ using Coor = Field.Coordinates;
 
 using EvTrig = COEventTrigger ;
 
-// dodati buildera, 
+// dodati buildera,
 public class Game
-{ 
+{
     public GUISkin      characterSkin;
     public GUISkin knifeSkin, shotgunSkin;
     public List<CO>     characters      = new List<CO>();
@@ -28,26 +28,26 @@ public class Game
 
     public int crystalsOnBoard = 0;
     public int step;
-    public int maxStep; 
+    public int maxStep;
     public int dice;
 
 
 	  public Game ()
     {
-        SetSkins(); 
+        SetSkins();
 
         GameInitialization.Initialize(this);
-                
+
         StartGame();
     }
-    
+
     public void SetSkins()
     {
         characterSkin = Resources.Load("Skins/CharacterSkin") as GUISkin;
         knifeSkin = Resources.Load("Skins/KnifeSkin") as GUISkin;
         shotgunSkin = Resources.Load("Skins/ShotgunSkin") as GUISkin;
     }
-    
+
     public void StartGame()
     {
         //init
@@ -57,7 +57,7 @@ public class Game
         Board.Place(characters[2], board[Board.n - 1, Board.n - 1]);
 
         foreach (CO character in characters) character.baseField = character.currentField;
-        
+
         StartMainLoop();
     }
 
@@ -85,8 +85,8 @@ public class Game
     }
 
     #region actions
-   
-    
+
+
     private void ExecEventAction(EvTrig.Type type=EvTrig.Type.Default, CO coTriggerer=null)
     {
         if (type == EvTrig.Type.StepOnField)
@@ -99,7 +99,7 @@ public class Game
               //  Debug.Log(currentField.fieldObjects[i].name);
                 if (currentCharacter != currCh) return;
                 currentField.fieldObjects[i].ExecEventAction(EvTrig.Type.StepOnField, round, step, maxStep, currCh, coTriggerer, currCh);
-              
+
             }
         }
         else
@@ -107,10 +107,8 @@ public class Game
             for (int i = gameObjects.Count - 1; i >= 0; --i)
                 gameObjects[i].ExecEventAction(type, round, step, maxStep, currCh, coTriggerer);
 
-            currCh.ExecEventAction(type, round, step, maxStep, currCh, coTriggerer);           
+            currCh.ExecEventAction(type, round, step, maxStep, currCh, coTriggerer);
         }
-            
-        
     }
 
     #endregion
@@ -119,7 +117,7 @@ public class Game
     public void FinishTurn()                            {   ExecEventAction(EvTrig.Type.FinishTurn);
                                                             NextPlayer();  }
 
-    public void GuiFinishTurn()                         {   if(false && step!=maxStep) DamageAndRepositionToBase(currCh); 
+    public void GuiFinishTurn()                         {   if(step!=maxStep) DamageAndRepositionToBase(currCh);
                                                             else FinishTurn();  }
 
 
@@ -148,7 +146,7 @@ public class Game
             break;
         }
         Board.Move(target, f);
-        
+
         Damage(target);
     }
 
@@ -194,15 +192,15 @@ public class Game
                                                             ExecEventAction(EvTrig.Type.StepOnField);           }
 
 
-    
+
     public void UseItem(CO character,Field field)
     {
         character.equipedItem.guiEvent.eventAction(character, character.equipedItem, field.fieldObjects.Find(x => x.type == CO.Type.Character));
         ExecEventAction(EvTrig.Type.UseItem, character.equipedItem);
-        character.UnEquip(); 
+        character.UnEquip();
     }
     public void CurrentCharacterUseItem(Field field)     { UseItem(currCh, field); }
-  
+
     public bool CanUseItem(CO attacker, Field field)
     {
         if (attacker.equipedItem == null) return false;
@@ -216,7 +214,7 @@ public class Game
 
 
 
-    public void PickUp(CO item) 
+    public void PickUp(CO item)
     {
         currCh.items.Add(item);
         Board.Remove(item);
@@ -262,31 +260,31 @@ public class Game
        if(from.items.Count==0) return null ;
        CO item = from.items[from.items.Count-1];
        from.items.RemoveAt(from.items.Count-1);
-       COEvent returnItemEvent = new COEvent(name: "ReturnItem", 
-          eventTrigger: new EvTrig( stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start)), 
+       COEvent returnItemEvent = new COEvent(name: "ReturnItem",
+          eventTrigger: new EvTrig( stepDes: new EvTrig.Description(type: EvTrig.Description.Type.Start)),
           eventAction: delegate (CO character2, CO caller2, CO target2) { }
           );
-       returnItemEvent.eventAction = delegate (CO character2, CO caller2, CO target2) { 
+       returnItemEvent.eventAction = delegate (CO character2, CO caller2, CO target2) {
               if(tempOwner!=null && tempOwner.items.Contains(item))
-              {  tempOwner.items.Remove(item); 
+              {  tempOwner.items.Remove(item);
                  character2.items.Add(item);
-                 character2.coEvents.Remove(returnItemEvent); 
+                 character2.coEvents.Remove(returnItemEvent);
               }
           };
 
       from.coEvents.Add(returnItemEvent);
       return item;
     }
-   // jos trebamo dodati event crnome da izgubi item tj to treba biti u ovom returnu 
+   // jos trebamo dodati event crnome da izgubi item tj to treba biti u ovom returnu
     public void AddItem(CO item,CO to)
     {
 //      CO itemCopy = new CO(item);
       CO itemCopy = item;
- 
+
       itemCopy.usable=true;
       to.items.Add(itemCopy);
 
-      
+
     }
 
    public GUISkin Skin(Field field)
@@ -294,7 +292,7 @@ public class Game
      if ( currCh.currentField == field)     return characterSkin;
      if ( field.fieldObjects.Exists(x => x.name=="Knife"))  return knifeSkin;
      if (field.fieldObjects.Exists(x => x.name == "Shotgun")) return shotgunSkin;
-     return field.Skin(); 
+     return field.Skin();
    }
 
 }

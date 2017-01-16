@@ -100,7 +100,7 @@ public partial class CoreObject
     public CoreObject(string name,
                         int[] stepPattern = null,
                         bool pickUpOnMaxStep = true,
-                        int health = 2,
+                        int health = 4,
                         int crystals = 0,
                         int lastCrystalTurn = -1,
                         int crystalUltaTreshold = 1,

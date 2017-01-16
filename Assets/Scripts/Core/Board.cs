@@ -8,7 +8,7 @@ using CO = CoreObject;
 
 public class Board//:IEnumerable<Field>
 {
-    
+
     public static int n = 9;
 
     public Field[,] fields = new Field[n, n];
@@ -37,10 +37,10 @@ public class Board//:IEnumerable<Field>
     }
 
 
-  
+
     public Field this[int i,int j]
     {
-        
+
         get { return fields[i, j]; }
         set { fields[i, j] = value; }
     }
@@ -58,7 +58,7 @@ public class Board//:IEnumerable<Field>
     {
         target.currentField.fieldObjects.RemoveAll(co => co.type == CoreObject.Type.Character);
     }
-    
+
     private List<Field> FreeFields()
     {
         List<Field> freeFields = new List<Field>();
