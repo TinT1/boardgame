@@ -121,6 +121,15 @@ public class Game
                                                             else FinishTurn();  }
 
 
+    public CoreObject retCharachterOnField(Field field){
+        foreach(CoreObject co in field.fieldObjects){
+            if(co.type == CoreObject.Type.Character)
+            {
+                return co;
+            }
+        }
+        return null;
+    }
 
     public void Damage(CoreObject target)
     {
