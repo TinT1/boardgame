@@ -57,7 +57,7 @@ public partial class CoreObject
     }
     public string PrintStepHistory(){
       string res="";
-      stepHistory.ForEach(x => res +=  x.Print()); 
+      stepHistory.ForEach(x => res +=  x.Print());
       return res;
     }
 
@@ -84,7 +84,7 @@ public partial class CoreObject
 
     public bool IsVisibleTo(CO co)
     {
-    return this.publicVisibility || this == co || this.BelongsTo(co); 
+    return this.publicVisibility || this == co || this.BelongsTo(co);
     }
 
     private int[] defaultStepPattern = new int[] { 1, 2, 3, 4, 5, 6 };
@@ -139,9 +139,9 @@ public partial class CoreObject
         this.canStepOnPrevious = canStepOnPrevious;
         if (range == null) this.range = new CORange(); else this.range = range;
         this.type = type;
-       
+
         CoreObject.created.Add(this);
-        
+
     }
 
     public CoreObject(CO co)
@@ -167,7 +167,7 @@ public partial class CoreObject
         this.publicVisibility = co.publicVisibility;
         this.canStepOnPrevious = co.canStepOnPrevious;
 
-        if (co.range == null) this.range = new CORange(); 
+        if (co.range == null) this.range = new CORange();
         else this.range = new CORange(co.range);
 
         this.type = co.type;
@@ -194,7 +194,7 @@ public partial class CoreObject
 
         if(coTriggerer==null || coTriggerer == this)
         for(int evIndex = this.coEvents.Count-1;evIndex>=0;--evIndex)
-            { 
+            {
                 COEvent coEvent = this.coEvents[evIndex];
                 if (coEvent.eventTrigger.IsTriggered(eventType, round, step, maxStep,depth)) coEvent.eventAction(character, this, target);
             }
@@ -231,5 +231,5 @@ public partial class CoreObject
         }
     }
 
-    
+
 }

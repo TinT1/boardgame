@@ -12,7 +12,7 @@ public class GameGui : MonoBehaviour
     public static bool inputFinished;
 
     public static Dictionary<string,GUIStyle> customStyles;
-    
+
     public float fieldW = 70f, fieldH = 50f;
     float ratio = 0.9f;
 
@@ -47,7 +47,7 @@ public class GameGui : MonoBehaviour
         GUILayout.BeginArea(new Rect(contentX,0f,8f*Screen.width,Screen.height));
 
         GUI.skin = skins["CO"];
-        
+
         #region fields
         for (int i = 0; i < Board.n; ++i)
             for (int j = 0; j < Board.n; ++j)
@@ -106,7 +106,7 @@ public class GameGui : MonoBehaviour
 
             }
         #endregion
- 
+
         GUI.skin = defaultSkin;
         int row = 0;
 

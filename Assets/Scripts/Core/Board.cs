@@ -31,12 +31,16 @@ public class Board//:IEnumerable<Field>
 
     public static void Place(CoreObject coreObject, Field field)
     {
-        field.fieldObjects.Add(coreObject);
-        coreObject.previousField = coreObject.currentField;
-        coreObject.currentField = field;
+        bool same = false;
+        foreach(CoreObject co in field.fieldObjects)
+                if(co.name == coreObject.name)
+                    same = true;
+        if(!same){
+            field.fieldObjects.Add(coreObject);
+            coreObject.previousField = coreObject.currentField;
+            coreObject.currentField = field;
+        }
     }
-
-
 
     public Field this[int i,int j]
     {
@@ -44,7 +48,7 @@ public class Board//:IEnumerable<Field>
         get { return fields[i, j]; }
         set { fields[i, j] = value; }
     }
-    //*
+
     public static bool Contains(CO co)
     {
         return co.currentField!=null && co.currentField.fieldObjects.Contains(co);

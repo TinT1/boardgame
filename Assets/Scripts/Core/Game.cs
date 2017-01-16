@@ -10,7 +10,6 @@ using Coor = Field.Coordinates;
 
 using EvTrig = COEventTrigger ;
 
-// dodati buildera,
 public class Game
 {
     public GUISkin      characterSkin;
@@ -116,18 +115,10 @@ public class Game
     #region Behaviour
     public void FinishTurn()                            {   ExecEventAction(EvTrig.Type.FinishTurn);
                                                             NextPlayer();  }
-
     public void GuiFinishTurn()                         {   if(step!=maxStep) DamageAndRepositionToBase(currCh);
                                                             else FinishTurn();  }
-
-
     public CoreObject retCharachterOnField(Field field){
-        foreach(CoreObject co in field.fieldObjects){
-            if(co.type == CoreObject.Type.Character)
-            {
-                return co;
-            }
-        }
+        foreach(CoreObject co in field.fieldObjects)    {   if(co.type == CoreObject.Type.Character) return co;
         return null;
     }
 
@@ -284,7 +275,7 @@ public class Game
       from.coEvents.Add(returnItemEvent);
       return item;
     }
-   // jos trebamo dodati event crnome da izgubi item tj to treba biti u ovom returnu
+
     public void AddItem(CO item,CO to)
     {
 //      CO itemCopy = new CO(item);
