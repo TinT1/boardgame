@@ -182,7 +182,7 @@ public class Game
             if (target.type == CoreObject.Type.Character && character.blockFree.Contains(CoreObject.Type.Character) == false) return false;
             else if (target.type == CoreObject.Type.Environment && character.blockFree.Contains(CoreObject.Type.Environment) == false) return false;
 
-        if (character.previousField == field && !(step == 0)) return false;
+        if (character.previousField == field && !(step == 0) && !currCh.canStepOnPrevious) return false;
         return true;
     }
 
