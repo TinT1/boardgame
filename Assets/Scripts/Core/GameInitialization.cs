@@ -252,11 +252,11 @@ public static class GameInitialization
                                                 eventTrigger: new EvTrig(stepDes: new EvTrig.Description(EvTrig.Description.Type.Start)),
                                                 eventAction: delegate (CO character, CO caller, CO target) {
                                                     System.Random rnd = new System.Random();
-                                                    if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(catapult));
-                                                    if (rnd.NextDouble() > 0.98f) game.board.TryRandomPlace(new CO(laser));
-                                                    if (rnd.NextDouble() > 0.9f)  game.board.TryRandomPlace(new CO(baseball));
-                                                    if (rnd.NextDouble() > 0.9f)  game.board.TryRandomPlace(new CO(knife));
-                                                    if (game.crystalsOnBoard < 5) { game.crystalsOnBoard++; game.board.TryRandomPlace(new CO(crystal)); }
+                                                    if (rnd.NextDouble() > 0.5f && game.itemsOnBoard < 4) { game.board.TryRandomPlace(new CO(catapult)); game.itemsOnBoard++;}
+                                                    if (rnd.NextDouble() > 0.5f && game.itemsOnBoard < 4) { game.board.TryRandomPlace(new CO(laser)); game.itemsOnBoard++;}
+                                                    if (rnd.NextDouble() > 0.5f && game.itemsOnBoard < 4)  { game.board.TryRandomPlace(new CO(baseball)); game.itemsOnBoard++;}
+                                                    if (rnd.NextDouble() > 0.5f && game.itemsOnBoard < 4)  { game.board.TryRandomPlace(new CO(knife)); game.itemsOnBoard++;}
+                                                    if (game.crystalsOnBoard < 2) { game.crystalsOnBoard++; game.board.TryRandomPlace(new CO(crystal)); }
                                                 }));
 
 
@@ -432,7 +432,6 @@ public static class GameInitialization
 
         game.characters.Add(zeleni);
         game.characters.Add(zuti);
-        Board.Place(new CO(shotgun), game.board[5, 5]);
 
         var textures = Resources.LoadAll("Textures/CO",typeof(Texture));
 

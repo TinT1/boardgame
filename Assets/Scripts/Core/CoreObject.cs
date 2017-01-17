@@ -103,7 +103,7 @@ public partial class CoreObject
                         int health = 4,
                         int crystals = 0,
                         int lastCrystalTurn = -1,
-                        int crystalUltaTreshold = 1,
+                        int crystalUltaTreshold = 2,
                         COEvent ulta = null,
                         COEvent guiEvent =null,
                         List<COEvent> eventAction = null,

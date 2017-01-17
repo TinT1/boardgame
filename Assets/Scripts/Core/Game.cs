@@ -26,6 +26,7 @@ public class Game
     public List<CO> gameObjects  = new List<CO>();
 
     public int crystalsOnBoard = 0;
+    public int itemsOnBoard = 0;
     public int step;
     public int maxStep;
     public int dice;
@@ -220,6 +221,7 @@ public class Game
         currCh.items.Add(item);
         Board.Remove(item);
         ExecEventAction(EvTrig.Type.Pickup, item);
+        itemsOnBoard--;
     }
     public void CollectCrystal(CO item)
     {

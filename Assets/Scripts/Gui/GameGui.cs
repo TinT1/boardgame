@@ -14,7 +14,7 @@ public class GameGui : MonoBehaviour
     public static Dictionary<string,GUIStyle> customStyles;
 
     public float fieldW = 70f, fieldH = 50f;
-    float ratio = 0.9f;
+    float ratio = 0.8f;
 
     void Awake()
     {
@@ -79,7 +79,6 @@ public class GameGui : MonoBehaviour
                     nameRect = new Rect(i * fieldW, (j + postotak) * fieldH, ratio * fieldW, fieldH * div);
 
 
-                    buttonLabel = (visibleFieldObjects.Count == 0) ? "" : visibleFieldObjects[fieldObjectIndex].name;
 
                     GUIStyle buttonStyle = (visibleFieldObjects.Count == 0) ? defaultSkin.button : customStyles[visibleFieldObjects[fieldObjectIndex].name];
 
