@@ -116,7 +116,7 @@ public class Game
     #region Behaviour
     public void FinishTurn()                            {   ExecEventAction(EvTrig.Type.FinishTurn);
                                                             NextPlayer();  }
-    public void GuiFinishTurn()                         {   if(step!=maxStep) DamageAndRepositionToBase(currCh);
+    public void GuiFinishTurn()                         {   if(step!=maxStep) DamageIfNotAllMoves(currCh);
                                                             else FinishTurn();  }
     public CoreObject retCharachterOnField(Field field){
         foreach(CoreObject co in field.fieldObjects)
@@ -135,21 +135,31 @@ public class Game
 
     public void DamageAndRepositionToBase(CoreObject target)
     {
+        if(target.currentField.type != Field.Type.White){
+            Board.Move(target, target.baseField);
+            Damage(target);
+        }
+    }
+
+    public void DamageIfNotAllMoves(CoreObject target)
+    {
         Board.Move(target, target.baseField);
         Damage(target);
     }
 
     public void DamageAndRepositionToField(CoreObject target, Field f)
     {
-        foreach (CO CObject in f.fieldObjects)
-        {
-            if (CObject.name == "wall") f = target.currentField;
-            if (CObject.type == CO.Type.Character) this.DamageAndRepositionToBase(CObject);
-            break;
-        }
-        Board.Move(target, f);
+         if(target.currentField.type != Field.Type.White){
+            foreach (CO CObject in f.fieldObjects)
+            {
+                if (CObject.name == "wall") f = target.currentField;
+                if (CObject.type == CO.Type.Character) this.DamageAndRepositionToBase(CObject);
+                break;
+            }
+            Board.Move(target, f);
 
-        Damage(target);
+            Damage(target);
+        }
     }
 
     public void MoveCurrChDamageAndRepositionToBase(CoreObject target)
