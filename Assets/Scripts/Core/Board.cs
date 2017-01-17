@@ -5,7 +5,7 @@ using System;
 using CO = CoreObject;
 public class Board//:IEnumerable<Field>
 {
-    public static int n = 9;
+    public static readonly int n = 9;
     public Field[,] fields = new Field[n, n];
     public Board()
     {
@@ -61,8 +61,7 @@ public class Board//:IEnumerable<Field>
     private Field RandomField()
     {
         List<Field> freeField = FreeFields();
-        System.Random rand = new System.Random();
-        int randIndex = UnityEngine.Random.Range(0, freeField.Count - 1); //rand.Next(0, freeField.Count - 1);
+        int randIndex = UnityEngine.Random.Range(0, freeField.Count - 1);
         return freeField[randIndex];
     }
     public bool TryRandomPlace(CoreObject coreObject)

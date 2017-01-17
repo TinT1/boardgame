@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 
 using CO = CoreObject;
@@ -9,12 +10,12 @@ public class GameGui : MonoBehaviour
     public Game game;
     public Board board;
 
-    public static bool inputFinished;
+    public static readonly bool inputFinished;
 
     public static Dictionary<string,GUIStyle> customStyles;
 
     public float fieldW = 70f, fieldH = 50f;
-    float ratio = 0.8f;
+    const float ratio = 0.8f;
 
     void Awake()
     {
@@ -42,8 +43,7 @@ public class GameGui : MonoBehaviour
         GUI.skin = defaultSkin;
         if (board == null) board = game.board;
 
-        float contentWidth = (Board.n   ) * fieldW ;
-        float contentX = 0;// Screen.width* 0.5f-  0.5f* contentWidth;
+        float contentX = 0;
         GUILayout.BeginArea(new Rect(contentX,0f,8f*Screen.width,Screen.height));
 
         GUI.skin = skins["CO"];
@@ -55,18 +55,13 @@ public class GameGui : MonoBehaviour
 
                 Field boardField = board[i, j];
 
-                if (boardField.Show() == false) continue;
+                if (!boardField.Show()) continue;
 
                 //GUI.skin = game.Skin(boardFieldra);
-
-
-                string buttonLabel = "";
+                StringBuilder buttonLabel = new StringBuilder();
 
 //                GUI.Box(new Rect(i * fieldW, j * fieldH, fieldW, fieldH), "",game.Skin(boardField).box);
                 Rect nameRect = new Rect(i * fieldW, j * fieldH, ratio * fieldW, fieldH);
-                Rect attackRect = new Rect(i * fieldW + nameRect.width, j * fieldH, (1f - ratio) * fieldW, fieldH);
-
-
                 List<CO> visibleFieldObjects = new List<CO>();
                 boardField.fieldObjects.ForEach(x =>  { if(x.IsVisibleTo(game.currCh)) visibleFieldObjects.Add(x);} );
 
@@ -82,27 +77,20 @@ public class GameGui : MonoBehaviour
 
                     GUIStyle buttonStyle = (visibleFieldObjects.Count == 0) ? defaultSkin.button : customStyles[visibleFieldObjects[fieldObjectIndex].name];
 
-                    if (game.currCh.GetState == CO.State.Move) buttonLabel += game.CanCurrentCharacterMove(board[i, j]) ? "*" : "";
-                    if (game.currCh.GetState == CO.State.UseItem) buttonLabel += game.CanCurrentCharacterUseItem(boardField) ? "XY" : "";
+                    if (game.currCh.GetState == CO.State.Move) buttonLabel.Append(game.CanCurrentCharacterMove(board[i, j]) ? "*" : "");
+                    if (game.currCh.GetState == CO.State.UseItem) buttonLabel.Append(game.CanCurrentCharacterUseItem(boardField) ? "XY" : "");
 
-                    if (GUI.Button(nameRect, buttonLabel,buttonStyle))
+                    if (GUI.Button(nameRect, buttonLabel.ToString(),buttonStyle))
                     {
-                        if (game.currCh.GetState == CO.State.Move && game.CanCurrentCharacterMove(boardField) == true)
+                        if (game.currCh.GetState == CO.State.Move && game.CanCurrentCharacterMove(boardField))
                             game.MoveCurrentCharacter(boardField);
 
-                        if (game.currCh.GetState == CO.State.UseItem && game.CanCurrentCharacterUseItem(board[i, j]) == true)
-                            if (visibleFieldObjects.Exists(co => co.type == CoreObject.Type.Character))
-                            {
-                                game.CurrentCharacterUseItem(boardField);
-                            }
+                        if (game.currCh.GetState == CO.State.UseItem && game.CanCurrentCharacterUseItem(board[i, j])
+                            && visibleFieldObjects.Exists(co => co.type == CoreObject.Type.Character))
+                            game.CurrentCharacterUseItem(boardField);
                     }
                     if (visibleFieldObjects.Count == 0) break;
                 }
-
-
-
-                // if (GUI.Button(atacckRect, "")) ;
-
             }
         #endregion
 
@@ -139,7 +127,7 @@ public class GameGui : MonoBehaviour
 
         #endregion
 
-        if (game.CanFinishTurn() == false) GUI.skin = skins["FinishTurnPassive"];
+        if (!game.CanFinishTurn()) GUI.skin = skins["FinishTurnPassive"];
 
         if (GUI.Button(new Rect((Board.n - 1 + 1) * fieldW, (Board.n) * fieldH, fieldW, fieldH), "Skip4Turns"))
         { game.FinishTurn(); game.FinishTurn(); game.FinishTurn(); game.FinishTurn(); }

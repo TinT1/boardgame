@@ -9,7 +9,7 @@ public delegate void COAction(CoreObject character = null, CoreObject caller = n
 
 public partial class CoreObject
 {
-    public static List<CoreObject> created = new List<CoreObject>();
+    public static readonly List<CoreObject> created = new List<CoreObject>();
     public Field currentField;
     public Field previousField;
     public Field baseField;
@@ -92,7 +92,7 @@ public partial class CoreObject
     Dictionary<String, COData> additionalVars = new Dictionary<string, COData>();
 
     public int  GetInt(String key)          { return additionalVars[key]._int;  }
-    public void SetInt(string key,int val)  { if (additionalVars.ContainsKey(key) == false) additionalVars[key] = new COData();
+    public void SetInt(string key,int val)  { if (!additionalVars.ContainsKey(key)) additionalVars[key] = new COData();
                                               additionalVars[key].SetInt(val); }
 
     #region constructors
@@ -216,7 +216,7 @@ public partial class CoreObject
         public enum Mode { Relative,Absolute};
 
         public List<Field.Coordinates> positions;
-        Mode mode;
+        readonly Mode mode;
 
         public CORange(List<Field.Coordinates> positions=null,Mode mode=Mode.Relative)
         {
