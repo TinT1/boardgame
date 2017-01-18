@@ -1,33 +1,48 @@
 # Board Game
 
-## Players
+## Star with project:
+### 1. Download latest Unity Game Engine
+### 2. Clone repository
+### 3. Open project
+### 4. Project -> Assets -> Scenes -> Game (Double Click)
+### 5. Hierarchy -> BoardGameGO -> Inspector -> Load GameGui Script
 
-### Rozi
-#### PASSIVE: 
-Dobije +1 kretnju, ako napravi 3 koraka zaredom u istom smjeru.
-#### ULTA: 
-2 kristala INT; Na sljedeće bacanje dodaju mu se dva skoka (skok preko 1 polja)
-Ideja/koncept/objašnjenje: Poprilično basic lik. Na prvu možda ne djeluje razorno, ali taj lik ima potencijal svaki treći turn skakati okolo kao luđak i raditi kaos. Na njemu će se možda najbolje vidjeti razlika između pametnijih igrača i seljobera.
+# Good practice
+## Run SonarQube :
+## 1. Download SonarQube -> [SonarQube](https://www.sonarqube.org/)
+## 2. Download SonarScanner -> [SonarScanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner)
+## 3. Extract SonarQube and run StartSonar Script
+## 4. Go to [localhost](localhost:9000)
+## 5. Go to root of repository
+## 6. vi sonar-project.properties
+## Put in next text :
+#unique sonar project key
+sonar.projectKey=my:project
+#this is the name and version displayed in the SonarQube UI. Was mandatory prior to SonarQube 6.1.
+sonar.projectName=boardgame
+sonar.projectVersion=1.0
 
-### Zeleni
-#### PASSIVE: 
-Posjeduje 3 strong bombe i po potezu 1 light bombu. Na kraju poteza može staviti max 1 strong i 1 light. Postavlja ih na polja kojima je prošao u posljednjem potezu, uključujući i startnu poziciju, ali ne i završnu. 
-Strong bombe – ostaju dok netko ne stane na njih. Uzimaju 1 HP, a na njega ne djeluju. Ubijeni se rspw. u bazi
-Light – oduzimaju 1 kretnju onome koji stane na njih u tom istom potezu. Dakle, nakon što igrač/nesretnik odredi svoje kretnje, a putem stane na zamku, bomba će ga vratiti na pretposljednje određeno polje. 
-#### ULTA: 
-5 kristala UNI; Na kraju poteza u kojem je pokupio peti kristal – 6 random postavljenih velikih bombi – dok ne završi sljedeći njegov potez
-Ideja/koncept/objašnjenje: Potencijalno najrazorniji lik u igri. Bombe može koristiti krajnje defanzivno, a opet imati i mogućnost ofenzive. 
+ #Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
+ #Since SonarQube 4.2, this property is optional if sonar.modules is set.
+ #If not set, SonarQube starts looking for source code from the directory containing
+ #the sonar-project.properties file.
+ sonar.sources=.
 
-### Žuti
-#### PASSIVE: 
-+1 kretanje na 2, 3, 4 ili 5. Iza sebe ostavlja neprolazan zid.  Zid ostaje dok on ne dovrši sljedeći turn. Njemu također „smeta“, tj. neprolazan je i za njega samog. Bodež je neiskoristiv na njemu, osim ako lik može proći preko zidova
-#### ULTA: 
-4 kristala UNI; Zatvaraju se prolazi prema bazi i prema bijelim poljima na 1 turn. Prolazi se zatvaraju čim završi potez u kojem je pokupio četvrti kristal, a otvaraju se krajem njegovog sljedećeg poteza. Dakle, oni koji bi mogli ostati zatvoreni gubili bi HP jer im je onemogućio kretanje. No, ni on ne može u bazu sljedeći turn, a ode li SLUČAJNO na potezu u kojem je pokupio posljednji kristal – sam sebi će oduzeti 1 HP 
-Ideja/koncept/objašnjenje lika: Lik kojeg će se sigurno koristiti na više različitih načina. Od onih koji će ga uzimati radi zida i ograničavati druge, do onih koji će ga htjeti radi koraka više i gledati kako pokupiti najbolju stvar na boardu, pa do kombinacija oba stila. Prvi lik koji je ikada nastao, a moguća i kasnija maskota/simbol igrice.
+  #Encoding of the source code. Default is default system encoding
+  #sonar.sourceEncoding=UTF-8
+## 7. Poistion in repository root, and call sonar-scanner Scripts
+### example :
+cd boardgame
+../../Desktop/sonar-scanner-2.8/bin/sonar-scanner
+## 8. Fix issues
 
-### Taht (lopov)
-#### PASSIVE: 
-u potezu može više puta proći preko istog polja; može pokupiti stvari usput. 
-#### ULTA:
-4 kristala INT; pljačka, uzima item ili oružje drugom igraču i mora ga iskoristiti odmah jer već na potezu opljačkanog vraća se ukradeno vlasniku. Dakle, ako ne iskoristi oružje/item, predmet ide natrag. 
-Ideja/koncept/objašnjenje: Lik koji čeka savršeni trenutak. Ima dovoljno sigurnosti, pogotovo protiv ovih koji mijenjaju teren jer može prelaziti preko svojih poteza za koje već zna da su sigurni. Nakon što dobije ultu može je iskoristiti za kill, ali i za krađu itema kako bi se usporio/iznervirao protivnik.
+# Run Build
+
+## 1. [Build Board Game](https://developer.cloud.unity3d.com/build/orgs/tinolov/projects/boardgame/)
+## 2. Cloud Build -> Start New Builds
+
+# For more information about Integration of Board Game Contact Tin Topolovec [GitHub acc](https://github.com/TinT1)
+
+# Board Game team members :
+# Vitomir Canadi
+# Tin Topolovec
