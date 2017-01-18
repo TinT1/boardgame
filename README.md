@@ -12,7 +12,7 @@
 #### 1. Download SonarQube -> [SonarQube](https://www.sonarqube.org/)
 #### 2. Download SonarScanner -> [SonarScanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner)
 #### 3. Extract SonarQube and run StartSonar Script
-#### 4. Go to [localhost](localhost:9000)
+#### 4. Go to localhost:9000
 #### 5. Go to root of repository
 #### 6. vi sonar-project.properties
 ##### Put in next text :
@@ -31,7 +31,7 @@ cd boardgame
 ../../Desktop/sonar-scanner-2.8/bin/sonar-scanner
 #### 8. Fix issues
 
-# Run Build
+### Run Build
 
 #### 1. [Build Board Game](https://developer.cloud.unity3d.com/build/orgs/tinolov/projects/boardgame/)
 #### 2. Cloud Build -> Start New Builds
