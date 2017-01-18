@@ -20,7 +20,7 @@ public class COEventTrigger
         public int start;
         public int last;
 
-        public Description(Type type=Type.Periodic, int period=1,int pShift = 0, int exact=-1, int start=0, int last = -1)
+        public Description(Type type=Type.Periodic, int period=1,int pShift = 0, int exact = -1, int start=0, int last = -1)
         {
             this.type = type;
             this.period = period;
