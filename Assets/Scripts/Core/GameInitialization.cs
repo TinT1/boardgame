@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+     using UnityEditor;
+ #endif
+
 
 using CO = CoreObject;
 using Coor = Field.Coordinates;
