@@ -40,7 +40,7 @@ cd boardgame
 
 Board game is managed over Waffle ticketing system : [WaffleBG](https://waffle.io/TinT1/boardgame)
 
-We strongly reccomend writing tickets for problem found in game!!!
+We strongly recommend writing tickets for problem found in game!!!
 
 ### Board Game team members :
 #### Vitomir Canadi
