@@ -36,8 +36,12 @@ cd boardgame
 #### 1. [Build Board Game](https://developer.cloud.unity3d.com/build/orgs/tinolov/projects/boardgame/)
 #### 2. Cloud Build -> Start New Builds
 
-#### For more information about Integration of Board Game Contact Tin Topolovec [GitHub acc](https://github.com/TinT1)
+# Organization
 
-# Board Game team members :
+Board game is managed over Waffle ticketing system : [WaffleBG](https://waffle.io/TinT1/boardgame)
+
+We strongly reccomend writing tickets for problem found in game!!!
+
+### Board Game team members :
 #### Vitomir Canadi
 #### Tin Topolovec
