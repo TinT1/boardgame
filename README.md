@@ -24,7 +24,7 @@ sonar.projectVersion=1.0
 
 sonar.sources=.
 
-#### 7. Poistion in repository root, and call sonar-scanner Scripts
+#### 7. Position in repository root, and call sonar-scanner Scripts
 ##### example :
 cd boardgame
 
