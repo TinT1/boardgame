@@ -16,10 +16,10 @@
 #### 5. Go to root of repository
 #### 6. vi sonar-project.properties
 ##### Put in next text :
-##### sonar.projectKey=my:project
-##### sonar.projectName=boardgame
-##### sonar.projectVersion=1.0
-##### sonar.sources=.
+sonar.projectKey=my:project
+sonar.projectName=boardgame
+sonar.projectVersion=1.0
+sonar.sources=.
 #### 7. Poistion in repository root, and call sonar-scanner Scripts
 ##### example :
 cd boardgame
