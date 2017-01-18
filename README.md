@@ -16,20 +16,10 @@
 #### 5. Go to root of repository
 #### 6. vi sonar-project.properties
 ##### Put in next text :
-#unique sonar project key
-sonar.projectKey=my:project
-#this is the name and version displayed in the SonarQube UI. Was mandatory prior to SonarQube 6.1.
-sonar.projectName=boardgame
-sonar.projectVersion=1.0
-
- # #Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
- #Since SonarQube 4.2, this property is optional if sonar.modules is set.
- #If not set, SonarQube starts looking for source code from the directory containing
- #the sonar-project.properties file.
- sonar.sources=.
-
-  #Encoding of the source code. Default is default system encoding
-  #sonar.sourceEncoding=UTF-8
+##### sonar.projectKey=my:project
+##### sonar.projectName=boardgame
+##### sonar.projectVersion=1.0
+##### sonar.sources=.
 #### 7. Poistion in repository root, and call sonar-scanner Scripts
 ##### example :
 cd boardgame
