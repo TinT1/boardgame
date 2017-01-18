@@ -22,7 +22,7 @@ sonar.projectKey=my:project
 sonar.projectName=boardgame
 sonar.projectVersion=1.0
 
- #Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
+ # #Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
  #Since SonarQube 4.2, this property is optional if sonar.modules is set.
  #If not set, SonarQube starts looking for source code from the directory containing
  #the sonar-project.properties file.
