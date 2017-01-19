@@ -45,3 +45,4 @@ We strongly recommend writing tickets for problem found in game!!!
 ### Board Game team members :
 #### Vitomir Canadi
 #### Tin Topolovec
+#### Matej Topolovec (temporary)
