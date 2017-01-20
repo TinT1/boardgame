@@ -36,11 +36,25 @@ cd boardgame
 #### 1. [Build Board Game](https://developer.cloud.unity3d.com/build/orgs/tinolov/projects/boardgame/)
 #### 2. Cloud Build -> Start New Builds
 
+### Creating pull requests :
+
+Creating pull request let's other people review code, and more important, let's them get familiar with what is done
+in certain commits. In theory we should never push commits to master.
+
+#### Convention for pull requests in Board Game
+
+You should name your pull request with next convention :
+waffle#[number of ticket]
+
+#### example :
+
+waffle#1 -> refering to number one ticket.
+
 # Organization
 
 Board game is managed over Waffle ticketing system : [WaffleBG](https://waffle.io/TinT1/boardgame)
 
-We strongly recommend writing tickets for problem found in game!!!
+We strongly recommend writing tickets for problems found in game!!!
 
 ### Board Game team members :
 #### Vitomir Canadi
