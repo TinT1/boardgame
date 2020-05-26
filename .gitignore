@@ -34,5 +34,4 @@ ProjectSettings/ProjectSettings.asset
 ProjectSettings/ProjectVersion.txt
 
 # Sonar
-sonar-project.properties
 .sonar/
